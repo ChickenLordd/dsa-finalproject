@@ -14,6 +14,9 @@ struct Student {
 };
 
 LinkedList<Student> student_list;
+// Data type: LinkedList
+// Node type: Student
+// Variable name: student_list 
 
 // table_rows placeholder for showTable related (used in traverse in addTableRow)
 vector<vector<string> > table_rows;   
