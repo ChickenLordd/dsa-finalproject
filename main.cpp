@@ -12,10 +12,10 @@
 int main() {
     // init data
     StudentList::init();
-    // CourseList::init();
+    CourseList::init();
     // CourseEnrollments::init();
     // CourseGrades::init();
-    // Users::init();
+    UserList::init();
 
     // show menu
     Menu::showLogin();

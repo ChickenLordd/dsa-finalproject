@@ -35,6 +35,12 @@ vector<pair<string, string> > menu_options;
 #define _MENU_OPTIONS
 #endif
 
+// input choices related
+#ifndef _INPUT_CHOICES
+vector<pair<string, string> > input_choices;
+#define _INPUT_CHOICES
+#endif
+
 // input related
 char getHiddenChar() {
     #ifdef _WIN32
@@ -62,9 +68,15 @@ public:
     }
 
     // clear input buffer
+    // static void clearInputBuffer() {
+    //     // Clear the input buffer to allow password input
+    //     cin.clear();
+    //     cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    // }
+
     static void clearInputBuffer() {
-        // Clear the input buffer to allow password input
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        char c;
+        while ((c = cin.get()) != '\n' && c != EOF);
     }
 
     // showPressAnyKey
@@ -80,11 +92,21 @@ public:
     // .......................................................................
     // input related
 
-    // showInputText
+    // showInputText (must not contain a space, if it is then only the chars before the spce will be returned)
     static string showInputText(const string& label, int padding) {
         cout << strPadEnd(label, padding) << ": ";
         string input;
         cin >> input;
+        return input;
+    }
+
+    // showInputTextLine (can contain spaces)
+    // it may need clearInputBuffer(); before, depending in the case if after another std::cin
+    static string showInputTextLine(const string& label, int padding) {
+        cout << strPadEnd(label, padding) << ": ";
+        string input;
+        cin.ignore(); // Ignore any newline characters from previous inputs
+        getline(cin, input);
         return input;
     }
 
@@ -142,17 +164,25 @@ public:
     }
 
     // showChoices
-    static string showChoices(const string& label, int padding, const vector<pair<string, string> >& choices) {
+    static void initChoices() {
+        input_choices.clear();
+    }
+
+    static void addChoice(const string& key, const string& label) {
+         input_choices.push_back(make_pair(key, label));
+    }
+
+    static string showChoices(const string& label, int padding) {
         while (true) {
             cout << strPadEnd(label, padding) << ": "; 
 
             string indent = "";
 
-            for (size_t i = 0; i < choices.size(); ++i) {
+            for (size_t i = 0; i < input_choices.size(); ++i) {
                 if (i > 0) {
                     indent = string(padding + 2, ' ');
                 }
-                cout << indent << choices[i].first << ": " << choices[i].second << endl;
+                cout << indent << input_choices[i].first << ": " << input_choices[i].second << endl;
             }
 
             string prompt = "Enter your choice";
@@ -160,13 +190,13 @@ public:
             string input;
             cin >> input;
 
-            for (size_t i = 0; i < choices.size(); ++i) {
-                if (input == choices[i].first) {
-                    return choices[i].first;
+            for (size_t i = 0; i < input_choices.size(); ++i) {
+                if (input == input_choices[i].first) {
+                    return input_choices[i].first;
                 }
             }
 
-            cout << "Invalid choice. Try again." << endl;
+            cout << strPadEnd("", padding+2) << "Invalid choice. Try again." << endl;
         }
     }
 
@@ -312,14 +342,24 @@ public:
     // string padding
     static string strPadEnd (const string& label, int padding) {
         string trimmed = strTrim(label);
+        if (padding <= trimmed.size()) {
+            return trimmed;
+        } 
         string spaces(padding - trimmed.size(), ' ');
         return trimmed + spaces;
     }
     
     static string strPadStart (const string& label, int padding) {
         string trimmed = strTrim(label);
+        if (padding <= trimmed.size()) {
+            return trimmed;
+        } 
         string spaces(padding - trimmed.size(), ' ');
         return spaces + trimmed;
+    }
+
+    static void showLine (const string& line) {
+        cout << line << endl;
     }
 
     // showLines (display array of strings)

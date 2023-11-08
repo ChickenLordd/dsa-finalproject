@@ -38,6 +38,8 @@ public:
   static void redirectToMenu ( const string& menu_type ) {
     if (menu_type == "main") {
       showMainMenu();
+    } else if (menu_type == "login") {
+      showLogin();
     } else if (menu_type == "students") {
       showStudentMenu();
     } else if (menu_type == "courses") {
@@ -61,9 +63,9 @@ public:
     cout << "(enter a 'q' as User Id to quit)" << endl << endl;
 
     string labelText = "Enter User Id";
-    string name = UI::showInputText(labelText, 15);
+    string id = UI::showInputText(labelText, 15);
  
-    if (name == "q") {
+    if (id == "q") {
         cout << endl << "Goodbye..." << endl << endl;
         exit(EXIT_SUCCESS);
     } else {
@@ -73,21 +75,28 @@ public:
 
       UI::showEmptyLine(1);
 
-      // handle login here, if valid then redirectToMenu to proper menu depending on type of user (admin, or parent)
-      // for debugging
-      // cout << "DEBUG :: " << name << " : " << password << "!" << endl;
-      // UI::showPressAnyKey();
+      // depending on validity or account type, redirectToMenu to different menu
+      UserInfo info = UserList::login(id, password);
 
-      // depending on account type, redirectToMenu to different menu
-      // right now default to MainMenu
-      
-      string user_type = "admin";
+      if (!info.valid) {
+        // error occured
+        UI::showEmptyLine(1);
+        cout << "ERROR :: " << info.message << "!" << endl;
+        
+        UI::showPressAnyKey();
+        redirectToMenu("login");
 
-      if (user_type == "admin") {
-        redirectToMenu("main");
-      } else if (user_type == "parent") {
-        redirectToMenu("users");
+      } else {
+        // valid
+        string user_type = info.user_type;
+
+        if (user_type == "admin") {
+          redirectToMenu("main");
+        } else if (user_type == "parent") {
+          redirectToMenu("users");
+        }
       }
+
     }
   }
 
@@ -111,8 +120,8 @@ public:
     UI::addMenuOption ( "2", "Manage Students");
     UI::addMenuOption ( "3", "Manage Courses");
     UI::addMenuOption ( "4", "Manage Course Enrollments");
-    UI::addMenuOption ( "5", "Manage Grade Assignment");
-    UI::addMenuOption ( "6", "Sign Up Parents for access");
+    UI::addMenuOption ( "5", "Manage Student Course Grades");
+    UI::addMenuOption ( "6", "Manage User Access");
     UI::addMenuOption ( "0", "Sign Out");
 
     string choice = UI::showMenuOptions(menuTitle);
@@ -161,13 +170,17 @@ public:
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
+
     } else if (choice == "1") {
       UI::clearScreen();
       showBanner();
+      
       StudentList::showTable("List of Students");
+      
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("students");
+
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
@@ -185,11 +198,10 @@ public:
 
     UI::initMenuOptions();
 
-    // UI::addMenuOption ( "1", "View List of Students");
-    // UI::addMenuOption ( "2", "View Student Academic Information");
-    // UI::addMenuOption ( "3", "Add New Student");
-    // UI::addMenuOption ( "4", "Update Student Information");
-    // UI::addMenuOption ( "5", "Remove an existing Student");
+    UI::addMenuOption ( "1", "View List of Courses");
+    UI::addMenuOption ( "3", "Add New Course");
+    UI::addMenuOption ( "4", "Update Course Information");
+    UI::addMenuOption ( "5", "Remove an existing Course");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
@@ -197,6 +209,17 @@ public:
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
+
+    } else if (choice == "1") {
+      UI::clearScreen();
+      showBanner();
+      
+      CourseList::showTable("List of Courses");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("courses");
+
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
@@ -214,7 +237,8 @@ public:
 
     UI::initMenuOptions();
 
-    // UI::addMenuOption ( "1", "View List of Students");
+    UI::addMenuOption ( "1", "View List of Students");
+    UI::addMenuOption ( "2", "View List of Courses");
     // UI::addMenuOption ( "2", "View Student Academic Information");
     // UI::addMenuOption ( "3", "Add New Student");
     // UI::addMenuOption ( "4", "Update Student Information");
@@ -226,6 +250,27 @@ public:
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
+
+    } else if (choice == "1") {
+      UI::clearScreen();
+      showBanner();
+      
+      StudentList::showTable("List of Students");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_enrollments");
+     
+    } else if (choice == "2") {
+      UI::clearScreen();
+      showBanner();
+      
+      CourseList::showTable("List of Courses");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_enrollments");
+       
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
@@ -239,11 +284,12 @@ public:
   static void showCourseGradesMenu () {
     showBanner();
 
-    string menuTitle = "Manage Course Grades";
+    string menuTitle = "Manage Student Course Grades";
 
     UI::initMenuOptions();
 
-    // UI::addMenuOption ( "1", "View List of Students");
+    UI::addMenuOption ( "1", "View List of Students");
+    UI::addMenuOption ( "2", "View List of Courses");
     // UI::addMenuOption ( "2", "View Student Academic Information");
     // UI::addMenuOption ( "3", "Add New Student");
     // UI::addMenuOption ( "4", "Update Student Information");
@@ -255,6 +301,27 @@ public:
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
+
+    } else if (choice == "1") {
+      UI::clearScreen();
+      showBanner();
+      
+      StudentList::showTable("List of Students");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_grades");
+     
+    } else if (choice == "2") {
+      UI::clearScreen();
+      showBanner();
+      
+      CourseList::showTable("List of Courses");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_grades");
+       
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
@@ -268,15 +335,15 @@ public:
   static void showUsersMenu () {
     showBanner();
 
-    string menuTitle = "Manage Parent Access";
+    string menuTitle = "Manage User Access";
 
     UI::initMenuOptions();
 
-    // UI::addMenuOption ( "1", "View List of Students");
-    // UI::addMenuOption ( "2", "View Student Academic Information");
-    // UI::addMenuOption ( "3", "Add New Student");
-    // UI::addMenuOption ( "4", "Update Student Information");
-    // UI::addMenuOption ( "5", "Remove an existing Student");
+    UI::addMenuOption ( "1", "View List of Users");
+    UI::addMenuOption ( "2", "View List of Students");
+    UI::addMenuOption ( "3", "Add New User");
+    UI::addMenuOption ( "4", "Update User Information");
+    UI::addMenuOption ( "5", "Remove an existing User");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
@@ -284,6 +351,70 @@ public:
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
+
+    } else if (choice == "1") {
+      UI::clearScreen();
+      showBanner();
+      
+      UserList::showTable("List of Users");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("users");
+
+    } else if (choice == "2") {
+      UI::clearScreen();
+      showBanner();
+      
+      StudentList::showTable("List of Students");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("users");
+
+    } else if (choice == "3") {
+      UI::clearScreen();
+      showBanner();
+      
+      UI::showLine("Add New User");
+      UI::showEmptyLine();
+
+      string id = UI::showInputText ("Enter User Id", 20); // no spaces capture
+      string name = UI::showInputTextLine ("Enter User Name", 20); // captur etext incl spaces
+      string password = UI::showInputText ("Enter User Password", 20); // do not hide chars (do not use showInputPassword)
+    
+      UI::showEmptyLine();
+
+      string choiceLabel = "Choose User Type";
+      UI::initChoices();
+      UI::addChoice("A", "Admin");
+      UI::addChoice("P", "Parent of Student");
+
+      string selected = UI::showChoices(choiceLabel, 20);
+    
+      string user_type;
+      string student_id = ""; // default to empty 
+    
+      if (selected == "A") {
+        user_type = "admin";
+      } else {
+        user_type = "parent";
+        UI::showEmptyLine();
+        string s_id = UI::showInputText ("Enter Student Id", 20);
+
+        // if we need to validate to see if student_id is valid, use StudentList::exists and StidentList::getData
+        // currently it's not validated, assume user enter the CORRECT student_id
+
+        student_id = s_id;
+      }
+
+      // save
+      UserList::addNew ( id, name, password, user_type, student_id );
+  
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("users");
+  
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);

@@ -5,7 +5,15 @@
 
 using namespace std;
 
-// Define a simple Student struct as an example of data
+// table_rows placeholder for showTable related (used in traverse in addTableRow)
+// wrapped in IF because it's also defined in other data classes
+#ifndef _TABLE_ROWS_FOR_DISPLAY
+vector<vector<string> > table_rows; 
+#define _TABLE_ROWS_FOR_DISPLAY
+#endif
+
+
+// Define a simple struct as an example of data
 struct Student {
     string id;
     string name;
@@ -18,48 +26,56 @@ LinkedList<Student> student_list;
 // Node type: Student
 // Variable name: student_list 
 
-// table_rows placeholder for showTable related (used in traverse in addTableRow)
-vector<vector<string> > table_rows;   
    
 class StudentList {
+
 public:
 
     // add data for quick test
     static void init() {
 
         // Create initial data nodes
-        Student student1 = {"S001", "Alice", 10, "Surabaya"};
-        Student student2 = {"S002", "Bob", 11, "Semarang"};
-        Student student3 = {"S003", "Charlie", 12, "Jakarta"};
+        addNew("S001", "Alice", 10, "Surabaya");
+        addNew("S002", "Charlie", 11, "Semarang");
+        // addNew("S003", "Hansen", 12, "Jakarta");
         
-        Student student4 = {"S004", "Brandon", 10, "Yogyakarta"};
-        Student student5 = {"S005", "Amelia", 11, "Surakarta"};
-        Student student6 = {"S006", "David", 12, "Malang"};
+        addNew("S004", "Brandon", 10, "Yogyakarta");
+        addNew("S005", "David", 11, "Surakarta");
+        // addNew("S006", "James", 12, "Malang");
 
-        Student student7 = {"S007", "Francis", 10, "Denpasar"};
-        Student student8 = {"S008", "George", 11, "Bogor"};
-        Student student9 = {"S009", "Robert", 12, "Bandung"};
+        addNew("S007", "Francis", 10, "Denpasar");
+        addNew("S008", "George", 11, "Bogor");
+        // addNew("S009", "Kaleb", 12, "Bandung");
 
-        // Add nodes to the linked list
-        student_list.addNode(student1.id, student1);
-        student_list.addNode(student2.id, student2);
-        student_list.addNode(student3.id, student3);
+    }
 
-        student_list.addNode(student4.id, student4);
-        student_list.addNode(student5.id, student5);
-        student_list.addNode(student6.id, student6);
+    // exists
+    static bool exists (const string& id) {
+        return student_list.nodeExists (id);
+    }
 
-        student_list.addNode(student7.id, student7);
-        student_list.addNode(student8.id, student8);
-        student_list.addNode(student9.id, student9);
+    // get data
+    static Student getData (const string& id) {
+        bool exists = student_list.nodeExists (id);
+        Node<Student>* node;
+        Student data;
+        if (exists) {
+            node = student_list.findNode(id);
+            data = node->data;
+        }
+        return data;
     }
 
     // add new 
-    static bool addNew (const string& id, const Student& data) {
+    static bool addNew (const string& id, const string& name, const int& grade_level, const string& city_of_birth ) {
         bool exists = student_list.nodeExists (id);
 
         if (!exists) {
+            Student data = { id, name, grade_level, city_of_birth };
             student_list.addNode (id, data);
+
+            // should add student to tree (under grade level)
+
             return true;
         } else {
             return false; // node with the same id already exists
@@ -109,7 +125,7 @@ public:
         student_list.traverse ( tableAddRow );
 
         const string headers[] = {"Id", "Name", "Grade Level", "City of birth"};
-        int col_sizes[] = {6,15, 12, 20};
+        int col_sizes[] = {6, 20, 12, 30};
         int num_cols = 4;
     
         // exit(EXIT_SUCCESS);
