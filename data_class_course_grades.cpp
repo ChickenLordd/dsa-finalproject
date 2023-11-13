@@ -6,4 +6,6 @@
 #include "data_class_courses.cpp"
 #include "data_class_course_enrollments.cpp"
 
+#include "data_tree_academic.cpp"
+
 using namespace std;

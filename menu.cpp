@@ -7,6 +7,8 @@
 #include "data_class_course_grades.cpp"
 #include "data_class_users.cpp"
 
+#include "data_tree_academic.cpp"
+
 using namespace std;
 
 class Menu {
@@ -130,17 +132,30 @@ public:
     if (choice == "0") {
       showLogin();
     } else if (choice == "1") {
-      // redirectToMenu("students");
+        UI::clearScreen();
+        showBanner();
+        
+        AcademicTree::showTree();
+        
+        UI::clearInputBuffer();
+        UI::showPressAnyKey();
+        redirectToMenu("main");
+
     } else if (choice == "2") {
       redirectToMenu("students");
+
     } else if (choice == "3") {
       redirectToMenu("courses");
+
     } else if (choice == "4") {
       redirectToMenu("course_enrollments");
+
     } else if (choice == "5") {
       redirectToMenu("course_grades");
+
     } else if (choice == "6") {
       redirectToMenu("users");
+
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);

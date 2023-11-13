@@ -3,6 +3,8 @@
 #include "base_class_linkedlist.cpp"
 #include "base_class_ui.cpp"
 
+#include "data_tree_academic.cpp"
+
 using namespace std;
 
 // table_rows placeholder for showTable related (used in traverse in addTableRow)
@@ -36,15 +38,15 @@ public:
 
         // Create initial data nodes
         addNew("S001", "Alice", 10, "Surabaya");
-        addNew("S002", "Charlie", 11, "Semarang");
-        // addNew("S003", "Hansen", 12, "Jakarta");
+        addNew("S002", "Charlie", 10, "Semarang");
+        // addNew("S003", "Hansen", 10, "Jakarta");
         
-        addNew("S004", "Brandon", 10, "Yogyakarta");
+        addNew("S004", "Brandon", 11, "Yogyakarta");
         addNew("S005", "David", 11, "Surakarta");
-        // addNew("S006", "James", 12, "Malang");
+        // addNew("S006", "James", 11, "Malang");
 
-        addNew("S007", "Francis", 10, "Denpasar");
-        addNew("S008", "George", 11, "Bogor");
+        addNew("S007", "Francis", 12, "Denpasar");
+        addNew("S008", "George", 12, "Bogor");
         // addNew("S009", "Kaleb", 12, "Bandung");
 
     }
@@ -74,7 +76,10 @@ public:
             Student data = { id, name, grade_level, city_of_birth };
             student_list.addNode (id, data);
 
+            string info = id + " " + name + " / " + to_string(grade_level) + " / " + city_of_birth; 
+
             // should add student to tree (under grade level)
+            AcademicTree::addStudent (grade_level, id, info);
 
             return true;
         } else {
@@ -88,6 +93,9 @@ public:
 
         if (exists) {
             student_list.deleteNode (id);
+
+            // also remove from tree
+            AcademicTree::removeStudent(id);
             return true;
         } else {
             return false; // node with that id does not exists

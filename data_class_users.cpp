@@ -107,8 +107,8 @@ public:
         user_list.traverse ( tableAddRow );
 
         const string headers[] = {"Id", "Name", "Password", "User Type", "Student Id"};
-        int col_sizes[] = {6, 30};
-        int num_cols = 2;
+        int col_sizes[] = {6, 30, 15, 10, 10};
+        int num_cols = 5;
     
         // exit(EXIT_SUCCESS);
 

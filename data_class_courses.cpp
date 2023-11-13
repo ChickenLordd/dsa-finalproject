@@ -73,6 +73,23 @@ public:
         }
     }
 
+    // exists
+    static bool exists (const string& id) {
+        return course_list.nodeExists (id);
+    }
+
+    // get data
+    static Course getData (const string& id) {
+        bool exists = course_list.nodeExists (id);
+        Node<Course>* node;
+        Course data;
+        if (exists) {
+            node = course_list.findNode(id);
+            data = node->data;
+        }
+        return data;
+    }
+
     // showTable related
     static void tableInitRows() {
         table_rows.clear();   
