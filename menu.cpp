@@ -1,6 +1,7 @@
 #pragma once
 
 #include "base_class_ui.cpp"
+#include "base_class_linkedlist.cpp"
 #include "data_class_students.cpp"
 #include "data_class_courses.cpp"
 #include "data_class_course_enrollments.cpp"
@@ -12,6 +13,8 @@
 using namespace std;
 
 class Menu {
+
+  
 public:
 
   // showBanner 9will be called before each menu is shown
@@ -305,9 +308,9 @@ public:
 
     UI::addMenuOption ( "1", "View List of Students");
     UI::addMenuOption ( "2", "View List of Courses");
-    // UI::addMenuOption ( "2", "View Student Academic Information");
-    // UI::addMenuOption ( "3", "Add New Student");
-    // UI::addMenuOption ( "4", "Update Student Information");
+    UI::addMenuOption ( "3", "View Academic Summary");
+    UI::addMenuOption ( "4", "View Student Grades");
+    UI::addMenuOption ( "5", "Update Student Grade");
     // UI::addMenuOption ( "5", "Remove an existing Student");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
@@ -315,7 +318,7 @@ public:
 
     // menu handler
     if (choice == "0") {
-      redirectToMenu("main");
+      redirectToMenu("course_grades");
 
     } else if (choice == "1") {
       UI::clearScreen();
@@ -336,15 +339,55 @@ public:
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_grades");
-       
+    } else if(choice == "3"){
+
+      UI::clearScreen();
+              showBanner();
+              
+              AcademicTree::showTree();
+              
+              UI::clearInputBuffer();
+              UI::showPressAnyKey();
+              redirectToMenu("main");
+    } else if(choice =="4"){
+
+
+    } else if (choice=="5"){
+      updateStudentCourseGrade();
+
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
       showMenuDebug (choice, choice_label);
      
       redirectToMenu("course_grades");
-    }
+    } 
   }
+
+ static void updateStudentCourseGrade() {
+    string studentID, courseID, newGrade;
+    cout << "Enter Student ID: ";
+    cin >> studentID;
+    cout << "Enter Course ID: ";
+    cin >> courseID;
+    cout << "Enter New Grade: ";
+    cin >> newGrade;
+
+    // Check if the grade is valid (you can add more validation logic if needed)
+
+    // Update the grade
+    bool updated = CourseGradesList::update(studentID, courseID, newGrade);
+
+    if (updated) {
+        // Show the table of grades for the updated student
+        CourseGradesList::showTable("List of Student Grades");
+    } else {
+        cout << "Error: Student/course combination not found. Please check the entered IDs." << endl;
+        UI::showPressAnyKey();
+    }
+}
+
+
 
   // showUsersMenu
   static void showUsersMenu () {
@@ -438,5 +481,6 @@ public:
       redirectToMenu("users");
     }
   }
+
+  };
     
-};
