@@ -128,18 +128,22 @@ public:
     }
 
     // addCourseGrade
-    // static void addCourseGrade (const string& student_id, const string& course_id) {
-    //     // parent to find
-    //     string p_node_type = "student";
-    //     string p_node_id = student_id; 
+static void addCourseGrade(const string& student_id, const string& course_id, const string& course_grade_id, const string& data) {
+    // parent to find
+    string p_node_type = "student";
+    string p_node_id = student_id;
 
-    //     // child to attach
-    //     string c_node_type = "course";
-    //     string c_node_id = course_id;
+    // child to attach
+    string c_node_type = "course";
+    string c_node_id = course_id + ":" + course_grade_id;
 
-    //     // attach
-    //     addChildToParentNode ( p_node_type, p_node_id, c_node_type, c_node_id );
-    // }
+    // attach
+    addChildToParentNode(p_node_type, p_node_id, c_node_type, c_node_id, data);
+}
+// removeCourseGrade
+static void removeCourseGrade(const string& course_grade_id) {
+    Tree::removeNode(academic_root, "course", course_grade_id);
+}
 
     // removeStudent
     static void removeStudent ( const string& student_id ) {
