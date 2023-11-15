@@ -312,7 +312,23 @@ public:
 
     // .......................................................................
     // misc methods
+    static string getCurrentDate() {
+        // Get the current time
+        time_t now;
+        time(&now);
+        struct tm* timeinfo = localtime(&now);
 
+        // // Format the date as DD-MM-YYYY
+        // char buffer[11]; // To store "DD-MM-YYYY\0"
+        // strftime(buffer, 11, "%d-%m-%Y", timeinfo);
+
+        // Format the date as DD-Mon-YYYY (e.g., 01-Nov-2023)
+        char buffer[12]; // To store "DD-Mon-YYYY\0"
+        strftime(buffer, 12, "%d %b %Y", timeinfo);
+
+        return std::string(buffer);
+    }
+    
     // showEmptyLine
     static void showEmptyLine(int lines = 1) {
         for (int i = 0; i < lines; ++i) {

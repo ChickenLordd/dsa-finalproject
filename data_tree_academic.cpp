@@ -15,9 +15,9 @@ void displayNodeDebug(TreeNode* TreeNode, int level) {
     // ignore root, level = 0
     if (level > 0) {
         for (int i = 1; i < level; i++) {
-            std::cout << "   "; // Two spaces for each level of indentation
+            cout << "   "; // Two spaces for each level of indentation
         }
-        std::cout << "L:" << level << " :: " << TreeNode->type << " : " << TreeNode->id << "  (" << TreeNode->data << ")" << std::endl;
+        cout << "L:" << level << "  T:" << TreeNode->type << "  ID:" << TreeNode->id << "  DATA:" << TreeNode->data << endl;
     }
 }
 
@@ -25,17 +25,17 @@ void displayNode(TreeNode* TreeNode, int level) {
     // ignore root, level = 0
     if (level > 0) {
         for (int i = 1; i < level; i++) {
-            std::cout << "   "; // Two spaces for each level of indentation
+            cout << "   "; // Two spaces for each level of indentation
         }
 
         if (TreeNode->type == "grade_level") {
-            std::cout << TreeNode->data << std::endl;
+            cout << endl << TreeNode->data << endl;
 
         } else if (TreeNode->type == "student") {
-            std::cout << TreeNode->data << std::endl;
+            cout << TreeNode->data << endl;
 
         } else {
-            std::cout << TreeNode->id << " - " << TreeNode->data << std::endl;
+            cout << TreeNode->id << " - " << TreeNode->data << endl;
         }
     }
 }
@@ -58,17 +58,30 @@ public:
     }
 
     // showTree
-    static void showTree() {
-        UI::showLine ("Academic (Tree) Summary Information");
+    static void showTree(TreeNode* start_node = academic_root) {
+        UI::showLine ("Academic Summary Information (Tree)");
         // Traverse the tree and display nodes with indentation using the callback function
-        Tree::traverse(academic_root, displayNode);
+        Tree::traverse(start_node, displayNode);
     }
 
     // showTreeDebug
-    static void showTreeDebug() {
-        UI::showLine ("DEBUG :: Academic (Tree) Summary Information");
+    static void showTreeDebug(TreeNode* start_node = academic_root) {
+        UI::showLine ("DEBUG :: Academic Summary Information (Tree)");
         // Traverse the tree and display nodes with indentation using the callback function
-        Tree::traverse(academic_root, displayNodeDebug);
+        Tree::traverse(start_node, displayNodeDebug);
+    }
+
+    // showStudentTree
+    static void showStudentTree(const string& id) {
+        TreeNode* start_node = Tree::findNode(academic_root, "student", id);
+        if (start_node != nullptr) {
+            UI::showLine ("Student Academic Summary Information (Tree)");
+            UI::showEmptyLine(1);
+            Tree::traverse(start_node, displayNode);
+        } else {
+            UI::showEmptyLine(1);
+            UI::showLine ("Student with ID: " + id + " is not found");
+        }
     }
 
     // tree node operations

@@ -11,6 +11,13 @@
 
 using namespace std;
 
+#ifndef _CURR_USER
+string curr_user_id = "";
+string curr_user_name = "";
+string curr_user_type = "";
+#define _CURR_USER
+#endif
+
 class Menu {
 public:
 
@@ -20,13 +27,18 @@ public:
 
     UI::showRepeatChar('-', 80);
 
+    int padding = 28;
+    string date = UI::strPadStart(UI::getCurrentDate(), padding);
+    string id = UI::strPadStart(curr_user_id, padding); // + " (" + curr_user_type + ")"
+    string name = UI::strPadStart(curr_user_name, padding);
+
     // https://www.ascii-art-generator.org/
     string banner[] = {
         "    __  _______ ___    ___ ",
-        "   / / / / ___//   |  /   |   WELCOME TO THE",
-        "  / /_/ /\\__ \\/ /| | / /| |   High School", // need to escape the back slasshes
-        " / __  /___/ / ___ |/ ___ |   Academic",
-        "/_/ /_//____/_/  |_/_/  |_|   Administration System",
+        "   / / / / ___//   |  /   |   WELCOME TO THE       " + date,
+        "  / /_/ /\\__ \\/ /| | / /| |   High School         ", // need to escape the back slashes
+        " / __  /___/ / ___ |/ ___ |   Academic             " + id,
+        "/_/ /_//____/_/  |_/_/  |_|   Administration System" + name,
         " "
     };
 
@@ -59,6 +71,11 @@ public:
 
   // showLogin
   static void showLogin () {
+    // reset curr user
+    curr_user_id = "";
+    curr_user_name = "";
+    curr_user_type = "";
+
     showBanner();
     
     cout << "Please Sign In" << endl << endl;
@@ -66,6 +83,8 @@ public:
 
     string labelText = "Enter User Id";
     string id = UI::showInputText(labelText, 15);
+    string password;
+    string user_type;
  
     if (id == "q") {
         cout << endl << "Goodbye..." << endl << endl;
@@ -73,7 +92,7 @@ public:
     } else {
     
       string labelPwd = "Enter password";
-      string password = UI::showInputPassword(labelPwd, 15);
+      password = UI::showInputPassword(labelPwd, 15);
 
       UI::showEmptyLine(1);
 
@@ -90,7 +109,12 @@ public:
 
       } else {
         // valid
-        string user_type = info.user_type;
+        user_type = info.user_type;
+
+        // set global var
+        curr_user_id = id;
+        curr_user_name = info.name;
+        curr_user_type = user_type;
 
         if (user_type == "admin") {
           redirectToMenu("main");
@@ -192,6 +216,20 @@ public:
       
       StudentList::showTable("List of Students");
       
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("students");
+
+  } else if (choice == "2") {
+      UI::clearScreen();
+      showBanner();
+      
+      string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
+    
+      UI::showEmptyLine();
+      AcademicTree::showStudentTree(id);
+
+      UI::showEmptyLine();
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("students");
