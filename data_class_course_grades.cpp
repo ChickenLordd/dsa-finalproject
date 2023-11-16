@@ -18,10 +18,14 @@ vector<vector<string>> table_rows;
 
 // Define a simple struct as an example of data
 struct CourseGrade {
-    string id; // Format: student_id:course_id
-    string student_id;
+    string id; 
+    string name;
     string course_id;
     string grade;
+    int mathgrade;
+    int chemgrade;
+    int biograde;
+    int physicgrade;
 };
 struct CourseGradeInfo {
     string info;
@@ -41,75 +45,73 @@ public:
 
     // add data for quick test
     static void init() {
-        // Add sample course grades
-        addNew("S001:CMAT10", "S001", "CMAT10", "A");
-        addNew("S002:CBIO10", "S002", "CBIO10", "B");
-        addNew("S003:CPHY10", "S003", "CPHY10", "C");
-        addNew("S004:CCHE10", "S004", "CCHE10", "A");
+
+        addNew("S001","Alice", "10", 80 , 95 , 76 , 69);
+        addNew("S002","Charlie", "10", 60 , 55 , 57 , 77);
+
+
+        addNew("S004","Brandon", "11", 71 , 75 , 66 , 74);
+        addNew("S005","David", "11", 94, 85 , 56 , 88);
+
+        addNew("S007","Francis", "12", 68, 85 , 81 , 86);
+        addNew("S008","George", "12", 74, 56 , 79 , 88);
     }
+    
 
     // add new 
-    static bool addNew(const string& id, const string& student_id, const string& course_id, const string& grade) {
+    static bool addNew(const string& id, const string& name, const string& grade, const int& mathgrade, const int& chemgrade, const int& biograde, const int& physicgrade) {
         bool exists = course_grades_list.nodeExists(id);
 
         if (!exists) {
-            CourseGrade data = {id, student_id, course_id, grade};
+            CourseGrade data = {id, name, grade};
             course_grades_list.addNode(id, data);
 
-            // Update the academic tree with the grade information
-            Student student_data = StudentList::getData(student_id);
-            Course course_data = CourseList::getData(course_id);
+            Student student_data = StudentList::getData(id);
 
-            string info = student_data.name + " / " + course_data.name + " / Grade: " + grade;
+        string info = student_data.name + " / Grade: " + grade;
 
-            // Should add course grade to tree (under course enrollment)
-            AcademicTree::addCourseGrade(student_id, course_id, id, info);
+        AcademicTree::addCourseGrade(id, grade, name, info);
 
-            return true;
-        } else {
-            return false; // Node with the same id already exists
-        }
-    }
-
-    // update existing
-   static bool update(const string& student_id, const string& course_id, const string& new_grade) {
-    string id = student_id + ":" + course_id;
-    bool exists = course_grades_list.nodeExists(id);
-
-    if (exists) {
-        Node<CourseGrade>* node = course_grades_list.findNode(id);
-        CourseGrade& data = node->data;
-
-        // Save the old grade for display purposes
-        string old_grade = data.grade;
-
-        // Update the grade
-        data.grade = new_grade;
-
-        // Display the update information
-        UI::showLine("Grade for " + data.id + " (Student ID: " + data.student_id +
-                     ", Course ID: " + data.course_id + ") updated from " +
-                     old_grade + " to " + new_grade);
         return true;
     } else {
-        return false; // Node with that id does not exist
+        return false;
     }
 }
 
+    // update existing
+   static bool update(const string& studentID, const string& courseID, const string& newGrade) {
+    bool exists = course_grades_list.nodeExists(studentID);
 
+    if (exists) {
+        Node<CourseGrade>* node = course_grades_list.findNode(studentID);
+        CourseGrade& data = node->data;
+
+        // Check if the course ID matches
+        if (data.course_id == courseID) {
+            string oldGrade = data.grade;
+            data.grade = newGrade;
+
+            UI::showLine("Grade for " + data.id + " in course " + courseID + " updated from " +
+                         oldGrade + " to " + newGrade);
+            return true;
+        } else {
+            return false; // Course ID does not match
+        }
+    } else {
+        return false; // Student ID not found
+    }
+}
 
     // delete existing
-    static bool remove(const string& id) {
+     static bool remove(const string& id) {
         bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
             course_grades_list.deleteNode(id);
-
-            // Also remove from tree
             AcademicTree::removeCourseGrade(id);
             return true;
         } else {
-            return false; // Node with that id does not exist
+            return false;
         }
     }
 
@@ -131,36 +133,36 @@ public:
     }
 
     // showTable related
-    static void tableInitRows() {
+     static void tableInitRows() {
         table_rows.clear();
     }
 
     static void tableAddRow(Node<CourseGrade>* node) {
-        CourseGrade data = node->data;
+    CourseGrade data = node->data;
 
-        vector<string> row;
-        row.push_back(data.id);
-        row.push_back(data.student_id);
-        row.push_back(data.course_id);
-        row.push_back(data.grade);
+    vector<string> row;
+    row.push_back(data.id);
+    row.push_back(data.name);
+    row.push_back(data.grade);
+    row.push_back(to_string(data.mathgrade));  // Convert int to string
+    row.push_back(to_string(data.biograde));  // Convert int to string
+    row.push_back(to_string(data.chemgrade));  // Convert int to string
+    row.push_back(to_string(data.physicgrade));  // Convert int to string
 
-        table_rows.push_back(row); // add to rows
-    }
+    table_rows.push_back(row);
+}
+
 
     static void showTable(const string& title) {
         tableInitRows();
-
-        // use anonymous callback function to build rows
-        // add row one by one per node
         course_grades_list.traverse(tableAddRow);
 
-        const string headers[] = {"Id", "Student Id", "Course Id", "Grade"};
-        int col_sizes[] = {6, 10, 10, 6};
-        int num_cols = 4;
+        const string headers[] = {"Student Id", "Name", "Grade", "Math", "Biology", "Chemistry", "Physics"};
+        int col_sizes[] = {6, 10, 10, 6, 6, 6, 6};
+        int num_cols = 7;
 
         UI::showEmptyLine(1);
         UI::showTable(title, headers, table_rows, col_sizes, num_cols);
         UI::showEmptyLine(1);
     }
-
 };

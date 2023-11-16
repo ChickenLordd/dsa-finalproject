@@ -344,65 +344,46 @@ public:
 
     UI::initMenuOptions();
 
-    UI::addMenuOption ( "1", "View List of Students");
-    UI::addMenuOption ( "2", "View List of Courses");
-    UI::addMenuOption ( "3", "View Academic Summary");
-    UI::addMenuOption ( "4", "View Student Grades");
-    UI::addMenuOption ( "5", "Update Student Grade");
-    // UI::addMenuOption ( "5", "Remove an existing Student");
+    UI::addMenuOption ( "1", "View Academic Summary");
+    UI::addMenuOption ( "2", "View Student Academic Information");
+    UI::addMenuOption ( "3", "Update Student Grade");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
 
     // menu handler
     if (choice == "0") {
-      redirectToMenu("course_grades");
+      redirectToMenu("main");
 
     } else if (choice == "1") {
       UI::clearScreen();
-      showBanner();
-      
-      StudentList::showTable("List of Students");
-      
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("course_grades");
-     
-    } else if (choice == "2") {
-      UI::clearScreen();
-      showBanner();
-      
-      CourseList::showTable("List of Courses");
-      
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("course_grades");
-    } else if(choice == "3"){
-
-      UI::clearScreen();
               showBanner();
-              
-              AcademicTree::showTree();
-              
+              CourseGradesList::showTable("Table of Student Grades");  
               UI::clearInputBuffer();
               UI::showPressAnyKey();
-              redirectToMenu("main");
-    } else if(choice =="4"){
-
-
-    } else if (choice=="5"){
+              redirectToMenu("course_grades");
+     
+    } else if (choice == "2") {
+      cout << "Under Construction" << endl;
+        UI::clearInputBuffer();
+        UI::showPressAnyKey();
+        redirectToMenu("main");
+    } else if(choice == "3"){
       updateStudentCourseGrade();
-
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
       showMenuDebug (choice, choice_label);
      
-      redirectToMenu("course_grades");
+      redirectToMenu("main");
     } 
   }
 
  static void updateStudentCourseGrade() {
+    UI::clearScreen();
+    showBanner();
+    cout << "Update Student Course Grade" << endl;
+
     string studentID, courseID, newGrade;
     cout << "Enter Student ID: ";
     cin >> studentID;
@@ -411,20 +392,38 @@ public:
     cout << "Enter New Grade: ";
     cin >> newGrade;
 
-    // Check if the grade is valid (you can add more validation logic if needed)
+    // Check if the student exists
+    if (!StudentList::exists(studentID)) {
+        cout << "Error: Student with ID " << studentID << " not found." << endl;
+        UI::showPressAnyKey();
+        redirectToMenu("course_grades");
+        return;
+    }
+
+    // Check if the course exists
+    if (!CourseList::exists(courseID)) {
+        cout << "Error: Course with ID " << courseID << " not found." << endl;
+        UI::showPressAnyKey();
+        redirectToMenu("course_grades");
+        return;
+    }
 
     // Update the grade
     bool updated = CourseGradesList::update(studentID, courseID, newGrade);
 
     if (updated) {
         // Show the table of grades for the updated student
+        UI::clearScreen();
+        showBanner();
         CourseGradesList::showTable("List of Student Grades");
+        UI::showPressAnyKey();
     } else {
         cout << "Error: Student/course combination not found. Please check the entered IDs." << endl;
         UI::showPressAnyKey();
     }
-}
 
+    redirectToMenu("course_grades");
+}
 
 
   // showUsersMenu
