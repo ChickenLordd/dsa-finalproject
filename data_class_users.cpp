@@ -70,15 +70,51 @@ public:
     }
 
     // delete existing
-    static bool remove (const string& id) {
-        bool exists = user_list.nodeExists (id);
+
+    static bool removeUser(const string& id) {
+        bool exists = user_list.nodeExists(id);
 
         if (exists) {
-            user_list.deleteNode (id);
+            user_list.deleteNode(id);
             return true;
         } else {
-            return false; // node with that id does not exists
+            return false; // node with that ID does not exist
         }
+    }
+
+    static void removeUserById() {
+        char choice;
+        do {
+            string idToRemove;
+            cout << "Enter the ID of the user you want to remove: ";
+            cin >> idToRemove;
+
+            bool removed = removeUser(idToRemove);
+
+            if (removed) {
+                cout << "User removed successfully." << endl;
+            } else {
+                cout << "User with the specified ID not found." << endl;
+            }
+
+            cout << "Do you want to delete more users? (y/n): ";
+            cin >> choice;
+
+        } while (choice == 'y' || choice == 'Y');
+    }
+
+    //edit user info
+    static bool updateUserInfo(const string& id, const string& name, const string& password, const string& user_type, const string& student_id) {
+    Node<User>* nodeToUpdate = user_list.findNode(id);
+
+        if (nodeToUpdate) {
+        // User found, update information
+            nodeToUpdate->data = {id, name, password, user_type, student_id};
+            return true;
+        } else {
+            return false; // Node with that ID does not exist
+        }
+         
     }
 
     // showTable related
@@ -151,6 +187,7 @@ public:
             info.valid = false;
             info.message = "User does not exists";
         }
+
 
         return info;
     }

@@ -510,6 +510,59 @@ public:
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("users");
+
+   } else if (choice == "4") {
+      // Update User Information
+      UI::clearScreen();
+      showBanner();
+      UserList::showTable("List of Users");
+
+      string userIdToUpdate = UI::showInputText("Enter User ID to Update", 20);
+      Node<User>* userNodeToUpdate = user_list.findNode(userIdToUpdate);
+
+      if (userNodeToUpdate) {
+        // User found, get updated information
+        string newName = UI::showInputText("Enter New Name", 20);
+        string newPassword = UI::showInputText("Enter New Password", 20);
+        string newUserType = UI::showInputText("Enter New User Type", 20);
+        string newStudentId = UI::showInputText("Enter New Student ID", 20);
+
+        // Update user information
+        bool updated = UserList::updateUserInfo(userIdToUpdate, newName, newPassword, newUserType, newStudentId);
+
+        if (updated) {
+            cout << "User information updated successfully." << endl;
+        } else {
+            cout << "Error updating user information. User not found." << endl;
+            }
+        } else {
+            cout << "User not found. Please enter a valid User ID." << endl;
+        }
+
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("users");
+  
+
+    } else if (choice == "5") {
+
+      // remove user
+      UI::clearScreen();
+      showBanner();
+      
+      UserList::init();
+
+      UserList::showTable("User List (Before Removal)");
+      UserList::removeUserById();
+      UserList::showTable("User List (After Removal)");
+
+    // save
+      string id;
+      UserList::removeUser (id);
+  
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("users");
   
     } else {
       // default handler
@@ -519,6 +572,4 @@ public:
       redirectToMenu("users");
     }
   }
-
-  };
-    
+};
