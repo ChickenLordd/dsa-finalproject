@@ -38,6 +38,12 @@ public:
             current->next = newNode;
         }
     }
+
+
+    // To gethead
+Node<T>* getHead() const {
+        return head;
+    }
 // filter nodes based on a predicate and apply a callback function to each node
     template <class Predicate, class Callback>
     void filterNodes(Predicate predicate, Callback callback) {

@@ -381,18 +381,17 @@ public:
     } 
   }
 
- static void updateStudentCourseGrade() {
+
+static void updateStudentCourseGrade() {
     UI::clearScreen();
     showBanner();
     cout << "Update Student Course Grade" << endl;
 
-    string studentID, courseID, newGrade;
+    string studentID, courseID;
+    int newMathGrade, newBioGrade, newChemGrade, newPhysicGrade;
+
     cout << "Enter Student ID: ";
     cin >> studentID;
-    cout << "Enter Course ID: ";
-    cin >> courseID;
-    cout << "Enter New Grade: ";
-    cin >> newGrade;
 
     // Check if the student exists
     if (!StudentList::exists(studentID)) {
@@ -402,22 +401,35 @@ public:
         return;
     }
 
-    // Check if the course exists
-    if (!CourseList::exists(courseID)) {
-        cout << "Error: Course with ID " << courseID << " not found." << endl;
-        UI::showPressAnyKey();
-        redirectToMenu("course_grades");
-        return;
-    }
+    Student student_data = StudentList::getData(studentID);
+    CourseGradesList::showTable("List of Student Grades for " + student_data.name);
 
-    // Update the grade
-    bool updated = CourseGradesList::update(studentID, courseID, newGrade);
+    cout << "Enter Course ID to update grade: ";
+    cin >> courseID;
 
-    if (updated) {
-        // Show the table of grades for the updated student
+    // Collect new grades
+    cout << "Enter New Math Grade for " << courseID << ": ";
+    cin >> newMathGrade;
+
+    cout << "Enter New Bio Grade for " << courseID << ": ";
+    cin >> newBioGrade;
+
+    cout << "Enter New Chem Grade for " << courseID << ": ";
+    cin >> newChemGrade;
+
+    cout << "Enter New Physics Grade for " << courseID << ": ";
+    cin >> newPhysicGrade;
+
+    // Update the grades
+    bool update = CourseGradesList::update(
+        studentID, courseID, newMathGrade, newChemGrade, newBioGrade, newPhysicGrade,
+    );
+
+    if (update) {
+        // Show the updated table of grades for the student
         UI::clearScreen();
         showBanner();
-        CourseGradesList::showTable("List of Student Grades");
+        CourseGradesList::showTable("List of Student Grades for " + student_data.name);
         UI::showPressAnyKey();
     } else {
         cout << "Error: Student/course combination not found. Please check the entered IDs." << endl;
@@ -426,7 +438,6 @@ public:
 
     redirectToMenu("course_grades");
 }
-
 
   // showUsersMenu
   static void showUsersMenu () {
