@@ -67,6 +67,8 @@ public:
       showCourseGradesMenu();
     } else if (menu_type == "users") {
       showUsersMenu();
+    } else if (menu_type == "parents") {
+      showParentsMenu();
     } else {
       showMainMenu();
     }
@@ -122,7 +124,7 @@ public:
         if (user_type == "admin") {
           redirectToMenu("main");
         } else if (user_type == "parent") {
-          redirectToMenu("users");
+          redirectToMenu("parents");
         }
       }
 
@@ -572,6 +574,39 @@ public:
       showMenuDebug (choice, choice_label);
      
       redirectToMenu("users");
+    }
+  }
+
+    // showParentsMenu
+    static void showParentsMenu () {
+    showBanner();
+
+    string menuTitle = "Parent Dashboard";
+
+    UI::initMenuOptions();
+
+    UI::addMenuOption ( "1", "View Student's Academic Info");
+    UI::addMenuOption ( "0", "Back to Main Menu");
+
+    string choice = UI::showMenuOptions(menuTitle);
+
+    // menu handler
+    if (choice == "0") {
+      redirectToMenu("parents");
+
+    } else if (choice == "1") {
+      UI::clearScreen();
+      showBanner();
+      
+      string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
+    
+      UI::showEmptyLine();
+      AcademicTree::showStudentTree(id);
+
+      UI::showEmptyLine();
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("parents");
     }
   }
 };
