@@ -511,38 +511,41 @@ public:
       redirectToMenu("users");
 
    } else if (choice == "4") {
-      // Update User Information
-      UI::clearScreen();
-      showBanner();
-      UserList::showTable("List of Users");
+        UI::clearScreen();
+        showBanner();
 
-      string userIdToUpdate = UI::showInputText("Enter User ID to Update", 20);
-      Node<User>* userNodeToUpdate = user_list.findNode(userIdToUpdate);
+        UserList::init();
 
-      if (userNodeToUpdate) {
-        // User found, get updated information
-        string newName = UI::showInputText("Enter New Name", 20);
-        string newPassword = UI::showInputText("Enter New Password", 20);
-        string newUserType = UI::showInputText("Enter New User Type", 20);
-        string newStudentId = UI::showInputText("Enter New Student ID", 20);
+        // Display the list of users
+        UserList::showTable("List of Users");
 
-        // Update user information
-        bool updated = UserList::updateUserInfo(userIdToUpdate, newName, newPassword, newUserType, newStudentId);
+        string idToUpdate = UI::showInputText("Enter User Id to Update", 20);
 
-        if (updated) {
-            cout << "User information updated successfully." << endl;
+        if (UserList::userExists(idToUpdate)) {
+
+            UI::showLine("Update User Information");
+
+            // Allow user to update information
+            string newId = UI::showInputText("Enter New User Id", 20);
+            string name = UI::showInputTextLine("Enter New User Name", 20); // capture text including spaces
+            string password = UI::showInputText("Enter New User Password", 20); // do not hide chars
+            string userType = UI::showInputText("Enter New User Type", 20); // capture text including spaces
+            string studentId = UI::showInputText("Enter New Student Id", 20); // capture text including spaces
+
+            // Update user data
+            UserList::updateUser(idToUpdate, newId, name, password, userType, studentId);
         } else {
-            cout << "Error updating user information. User not found." << endl;
-            }
-        } else {
-            cout << "User not found. Please enter a valid User ID." << endl;
+            UI::showLine("User with Id " + idToUpdate + " does not exist.");
         }
 
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("users");
-  
+        // Display updated user list
+        UserList::showTable("List of Users (After Update)");
 
+        UI::clearInputBuffer();
+        UI::showPressAnyKey();
+        redirectToMenu("users");
+   
+  
     } else if (choice == "5") {
 
       // remove user

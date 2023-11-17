@@ -91,7 +91,6 @@ public:
         return findNode(id) != nullptr;
     }
 
-
     // Method to traverse the list and apply a callback function
     void traverse(void (*callback)(Node<T>*)) {
         Node<T>* current = head;

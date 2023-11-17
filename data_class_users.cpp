@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include "base_class_linkedlist.cpp"
 #include "base_class_ui.cpp"
 #include "data_class_students.cpp"
@@ -96,18 +97,25 @@ public:
         } while (choice == 'y' || choice == 'Y');
     }
 
-    //edit user info
-    static bool updateUserInfo(const string& id, const string& name, const string& password, const string& user_type, const string& student_id) {
-    Node<User>* nodeToUpdate = user_list.findNode(id);
+    // update existing user
 
-        if (nodeToUpdate) {
-        // User found, update information
-            nodeToUpdate->data = {id, name, password, user_type, student_id};
-            return true;
+    static bool userExists(const string& id) {
+        return user_list.nodeExists(id);
+    }
+
+    // Update user information
+    static void updateUser(const string& id, const string& newId, const string& name, const string& password, const string& user_type, const string& student_id) {
+        // Check if the user with the given ID exists
+        if (user_list.nodeExists(id)) {
+            // Remove the existing user data
+            user_list.deleteNode(id);
+
+            // Add the updated user data
+            User data = {newId, name, password, user_type, student_id};
+            user_list.addNode(newId, data);
         } else {
-            return false; // Node with that ID does not exist
+            cout << "User with ID " << id << " not found." << endl;
         }
-         
     }
 
     // showTable related
@@ -184,4 +192,5 @@ public:
 
         return info;
     }
+    
 };
