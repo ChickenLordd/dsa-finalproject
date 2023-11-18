@@ -388,7 +388,7 @@ static void updateStudentCourseGrade() {
     cout << "Update Student Course Grade" << endl;
 
     string studentID, courseID;
-    int newMathGrade, newBioGrade, newChemGrade, newPhysicGrade;
+    int newGrade, newmathgrade, newbiograde, newchemgrade, newphysicgrade;
 
     cout << "Enter Student ID: ";
     cin >> studentID;
@@ -401,43 +401,54 @@ static void updateStudentCourseGrade() {
         return;
     }
 
-    Student student_data = StudentList::getData(studentID);
-    CourseGradesList::showTable("List of Student Grades for " + student_data.name);
+    CourseGrade studentData = CourseGradesList::getData(studentID);
+    CourseGradesList::showoneTable("List of Student Grades for " + studentData.name, studentID);
 
     cout << "Enter Course ID to update grade: ";
     cin >> courseID;
 
-    // Collect new grades
-    cout << "Enter New Math Grade for " << courseID << ": ";
-    cin >> newMathGrade;
+    if (!CourseList::exists(courseID)) {
+        cout << "Error: Course with ID " << courseID << " does not exist." << endl;
+        UI::showPressAnyKey();
+        redirectToMenu("course_grades");
+        return;
+    }
 
-    cout << "Enter New Bio Grade for " << courseID << ": ";
-    cin >> newBioGrade;
+    cout << "Enter New Grade for " << courseID << ": ";
+    cin >> newGrade;
 
-    cout << "Enter New Chem Grade for " << courseID << ": ";
-    cin >> newChemGrade;
+    // Update the grade
+    bool updated = false;
 
-    cout << "Enter New Physics Grade for " << courseID << ": ";
-    cin >> newPhysicGrade;
+    if (courseID == "CMAT") {
+        updated = CourseGradesList::updateMathGrade(studentID, courseID, to_string(newGrade), newmathgrade );
+    } else if (courseID == "CBIO") {
+        updated = CourseGradesList::updateBioGrade(studentID, courseID, to_string(newGrade),  newbiograde);
+    } else if (courseID == "CCHE") {
+        updated = CourseGradesList::updateChemGrade(studentID, courseID, to_string(newGrade), newchemgrade );
+    } else if (courseID == "CPHY") {
+        updated = CourseGradesList::updatePhysicsGrade(studentID, courseID, to_string(newGrade), newphysicgrade);
+    } else {
+        cout << "Error: Invalid Course ID." << endl;
+        UI::showPressAnyKey();
+        redirectToMenu("course_grades");
+        return;
+    }
 
-    // Update the grades
-    bool update = CourseGradesList::update(
-        studentID, courseID, newMathGrade, newChemGrade, newBioGrade, newPhysicGrade,
-    );
-
-    if (update) {
+     if (updated) {
         // Show the updated table of grades for the student
         UI::clearScreen();
         showBanner();
-        CourseGradesList::showTable("List of Student Grades for " + student_data.name);
+        CourseGradesList::showTable("List of Student Grades for " + studentData.name);
         UI::showPressAnyKey();
     } else {
-        cout << "Error: Student/course combination not found. Please check the entered IDs." << endl;
+        cout << "Error: Unable to update grade. Please check the entered Course ID." << endl;
         UI::showPressAnyKey();
     }
 
     redirectToMenu("course_grades");
 }
+
 
   // showUsersMenu
   static void showUsersMenu () {
