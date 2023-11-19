@@ -39,15 +39,15 @@ public:
         // Create initial data nodes
         addNew("S001", "Alice", 10, "Surabaya");
         addNew("S002", "Charlie", 10, "Semarang");
-        // addNew("S003", "Hansen", 10, "Jakarta");
+        addNew("S003", "Hansen", 10, "Jakarta");
         
         addNew("S004", "Brandon", 11, "Yogyakarta");
         addNew("S005", "David", 11, "Surakarta");
-        // addNew("S006", "James", 11, "Malang");
+        addNew("S006", "James", 11, "Malang");
 
         addNew("S007", "Francis", 12, "Denpasar");
         addNew("S008", "George", 12, "Bogor");
-        // addNew("S009", "Kaleb", 12, "Bandung");
+        addNew("S009", "Kaleb", 12, "Bandung");
 
     }
 
@@ -87,6 +87,29 @@ public:
         }
     }
 
+    // update: can only update name and city_of_birth
+    // must never update id, if you need to change id or grade_level, then remove and then addNew
+    static bool update (const string& id, const string& name, const string& city_of_birth ) {
+        bool exists = student_list.nodeExists (id);
+
+        if (!exists) {
+            return false; // node does not exists
+        } else {
+            Student old_data = getData(id);
+            Student updated_data = { id, name, old_data.grade_level, city_of_birth };
+            
+            Node<Student>* node;
+            node = student_list.findNode(id);
+            node->data = updated_data;
+      
+            string info = id + " " + name + " / " + to_string(old_data.grade_level) + " / " + city_of_birth; 
+
+            AcademicTree::updateStudent (old_data.grade_level, id, info);
+
+            return true;
+        }
+    }
+
     // delete existing
     static bool remove (const string& id) {
         bool exists = student_list.nodeExists (id);
@@ -99,6 +122,24 @@ public:
             return true;
         } else {
             return false; // node with that id does not exists
+        }
+    }
+
+    // display record
+    static void showRecord  (const string& id) {
+        bool exists = student_list.nodeExists (id);
+
+        if (exists) {
+            Student data = getData(id);
+            int padding = 15;
+
+            UI::showLine ( UI::strPadEnd ( "Id", padding) + ": " + data.id );
+            UI::showLine ( UI::strPadEnd ( "Name", padding) + ": " + data.name );
+            UI::showLine ( UI::strPadEnd ( "Grade Level", padding) + ": " + to_string(data.grade_level) );
+            UI::showLine ( UI::strPadEnd ( "City of birth", padding) + ": " + data.city_of_birth );
+            
+        } else {
+            UI::showLine ("Not found.");
         }
     }
 

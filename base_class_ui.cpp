@@ -105,7 +105,16 @@ public:
     static string showInputTextLine(const string& label, int padding) {
         cout << strPadEnd(label, padding) << ": ";
         string input;
-        cin.ignore(); // Ignore any newline characters from previous inputs
+
+        // Peek at the next character
+        int nextChar = std::cin.peek();
+        // Check if it's a newline character
+        if (nextChar == '\n') {
+            // Ignore the newline character
+            std::cin.ignore();
+        }
+
+        // read user input
         getline(cin, input);
         return input;
     }

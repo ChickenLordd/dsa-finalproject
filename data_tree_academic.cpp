@@ -112,8 +112,19 @@ public:
         // attach
         addChildToParentNode ( p_node_type, p_node_id, c_node_type, c_node_id, data );
     }
+    
+    // update: pass data as string
+    static void updateStudent (const int& grade_level, const string& student_id, const string& data="") {
+        // child to find
+        string c_node_type = "student";
+        string c_node_id = student_id;
 
-    // addCourseEnrollment
+        TreeNode* c_node = Tree::findNode (academic_root, c_node_type, c_node_id);
+        c_node->data = data;
+    }
+
+    // COURSE ENROLLMENTS
+    // addCourseEnrollment: course_enrollment_id = student_id + ":" + course_id (see data_class_course_enrollments)
     static void addCourseEnrollment (const string& student_id, const string& course_enrollment_id, const string& data="") {
         // parent to find
         string p_node_type = "student";

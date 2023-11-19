@@ -124,7 +124,7 @@ public:
         if (user_type == "admin") {
           redirectToMenu("main");
         } else if (user_type == "parent") {
-          redirectToMenu("parents");
+          redirectToMenu("users");
         }
       }
 
@@ -132,11 +132,16 @@ public:
   }
 
   // use this to temporarily handle a menu choice that has not been developed yet
-  static void showMenuDebug (const string& choice, const string& choice_label) {
+  static void showUnderDevelopmentResponse (const string& menu_id ) {
+      UI::showLine ("This menu option is UNDER CONSTRUCTION");
+      
+      UI::showEmptyLine();
       UI::clearInputBuffer();
       UI::showEmptyLine(1);
       cout << "UNDER CONSTRUCTION :: " << choice << " : " << choice_label << endl;
       UI::showPressAnyKey();
+
+      redirectToMenu(menu_id);
   }  
 
   // showMainMenu
@@ -210,6 +215,13 @@ public:
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
+    string menu_label = UI::getMenuLabel(choice);
+ 
+    UI::clearScreen();
+    showBanner();
+
+    UI::showLine(menu_label);
+    UI::showEmptyLine();
 
     // menu handler
     if (choice == "0") {
@@ -225,14 +237,75 @@ public:
       UI::showPressAnyKey();
       redirectToMenu("students");
 
-  } else if (choice == "2") {
-      UI::clearScreen();
-      showBanner();
-      
+    } else if (choice == "3") {  
+      string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
+      if (StudentList::exists(id)) {
+        UI::showLine ("Student Id already exists.");
+        UI::clearInputBuffer();
+        UI::showEmptyLine();
+    
+      } else {
+        string name = UI::showInputTextLine ("Enter Name", 20); 
+        int grade_level = UI::showInputInt("Enter Grade Level", 20); // no validation here
+        string new_city = UI::showInputTextLine ("Enter City of Birth", 20); 
+
+        UI::showEmptyLine();
+        
+        bool success = StudentList::addNew (id, name, grade_level, new_city);
+        if (success) {
+          UI::showLine ("New Record added.");
+        } else {
+          UI::showLine ("Record not added");
+        }
+      }
+
+      // UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("students");
+ 
+    } else if ((choice == "2") || (choice == "4") || choice == "5") {
+      // all these choices needs an id to operate on
       string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
     
       UI::showEmptyLine();
-      AcademicTree::showStudentTree(id);
+
+      if (choice == "2") {
+        // found, display
+        StudentList::showRecord(id);
+        UI::showEmptyLine();
+
+        AcademicTree::showStudentTree(id);
+
+      } else {
+        // 4 or 5 (before update or remove, show old data)
+        StudentList::showRecord(id);
+        UI::showEmptyLine();
+
+        if (choice == "4") {
+          // update
+          UI::showLine ("Enter information to update:");
+          UI::showEmptyLine();
+
+          string new_name = UI::showInputTextLine ("Enter Name", 20); 
+          string new_city = UI::showInputTextLine ("Enter City of Birth", 20); 
+  
+          bool success = StudentList::update (id, new_name, new_city);
+          if (success) {
+            UI::showLine("Record Updated.");
+          }
+
+        } else if (choice == "5") {
+          // remove
+          UI::showLine ("Are you sure?");
+          
+          string sure = UI::showInputText ("Please answer (y if sure)", 20); 
+          if (sure == "y") {
+            StudentList::remove(id);
+            UI::showEmptyLine();
+            UI::showLine ("Record deleted.");
+          }
+        }
+      }
 
       UI::showEmptyLine();
       UI::clearInputBuffer();
@@ -263,6 +336,13 @@ public:
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
+    string menu_label = UI::getMenuLabel(choice);
+
+    UI::clearScreen();
+    showBanner();
+  
+    UI::showLine(menu_label);
+    UI::showEmptyLine();
 
     // menu handler
     if (choice == "0") {
@@ -297,10 +377,8 @@ public:
 
     UI::addMenuOption ( "1", "View List of Students");
     UI::addMenuOption ( "2", "View List of Courses");
-    // UI::addMenuOption ( "2", "View Student Academic Information");
-    // UI::addMenuOption ( "3", "Add New Student");
-    // UI::addMenuOption ( "4", "Update Student Information");
-    // UI::addMenuOption ( "5", "Remove an existing Student");
+    UI::addMenuOption ( "3", "Enroll Student To A Course");
+    UI::addMenuOption ( "5", "Remove A Student Course");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
@@ -366,68 +444,12 @@ public:
               redirectToMenu("course_grades");
      
     } else if (choice == "2") {
-      cout << "Under Construction" << endl;
-        UI::clearInputBuffer();
-        UI::showPressAnyKey();
-        redirectToMenu("main");
-    } else if(choice == "3"){
-      updateStudentCourseGrade();
-    } else {
-      // default handler
-      string choice_label = UI::getMenuLabel (choice);
-      showMenuDebug (choice, choice_label);
-     
-      redirectToMenu("main");
-    } 
-  }
-
-
-static void updateStudentCourseGrade() {
-    UI::clearScreen();
-    showBanner();
-    cout << "Update Student Course Grade" << endl;
-
-    string studentID, courseID;
-    int newGrade, newmathgrade, newbiograde, newchemgrade, newphysicgrade;
-
-    cout << "Enter Student ID: ";
-    cin >> studentID;
-
-    // Check if the student exists
-    if (!StudentList::exists(studentID)) {
-        cout << "Error: Student with ID " << studentID << " not found." << endl;
-        UI::showPressAnyKey();
-        redirectToMenu("course_grades");
-        return;
-    }
-
-    CourseGrade studentData = CourseGradesList::getData(studentID);
-    CourseGradesList::showoneTable("List of Student Grades for " + studentData.name, studentID);
-
-    cout << "Enter Course ID to update grade: ";
-    cin >> courseID;
-
-    if (!CourseList::exists(courseID)) {
-        cout << "Error: Course with ID " << courseID << " does not exist." << endl;
-        UI::showPressAnyKey();
-        redirectToMenu("course_grades");
-        return;
-    }
-
-    cout << "Enter New Grade for " << courseID << ": ";
-    cin >> newGrade;
-
-    // Update the grade
-    bool updated = false;
-
-    if (courseID == "CMAT") {
-        updated = CourseGradesList::updateMathGrade(studentID, courseID, to_string(newGrade), newmathgrade );
-    } else if (courseID == "CBIO") {
-        updated = CourseGradesList::updateBioGrade(studentID, courseID, to_string(newGrade),  newbiograde);
-    } else if (courseID == "CCHE") {
-        updated = CourseGradesList::updateChemGrade(studentID, courseID, to_string(newGrade), newchemgrade );
-    } else if (courseID == "CPHY") {
-        updated = CourseGradesList::updatePhysicsGrade(studentID, courseID, to_string(newGrade), newphysicgrade);
+      CourseList::showTable("List of Courses");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_grades");
+       
     } else {
         cout << "Error: Invalid Course ID." << endl;
         UI::showPressAnyKey();
@@ -466,6 +488,13 @@ static void updateStudentCourseGrade() {
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
+    string menu_label = UI::getMenuLabel(choice);
+   
+    UI::clearScreen();
+    showBanner();
+
+    UI::showLine(menu_label);
+    UI::showEmptyLine();
 
     // menu handler
     if (choice == "0") {
@@ -499,6 +528,9 @@ static void updateStudentCourseGrade() {
       UI::showEmptyLine();
 
       string id = UI::showInputText ("Enter User Id", 20); // no spaces capture
+
+      // check if exists here, see student for example how to handle
+
       string name = UI::showInputTextLine ("Enter User Name", 20); // captur etext incl spaces
       string password = UI::showInputText ("Enter User Password", 20); // do not hide chars (do not use showInputPassword)
     
