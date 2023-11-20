@@ -102,7 +102,17 @@ public:
 
         } while (choice == 'y' || choice == 'Y');
     }
-
+ // get data
+    static User getData (const string& id) {
+        bool exists = user_list.nodeExists (id);
+        Node<User>* node;
+        User data;
+        if (exists) {
+            node = user_list.findNode(id);
+            data = node->data;
+        }
+        return data;
+    }
     // update existing user
 
     static bool userExists(const string& id) {

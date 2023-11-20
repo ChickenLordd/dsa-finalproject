@@ -400,10 +400,16 @@ public:
       UI::showPressAnyKey();
       redirectToMenu("courses");
 
+      UI::showEmptyLine();
+
     } else {
       // default handler
-      showUnderDevelopmentResponse ( "courses");
+      showUnderDevelopmentResponse ();
     }
+
+    UI::clearInputBuffer();
+    UI::showPressAnyKey();
+    redirectToMenu("courses");
   }
 
   // showCourseEnrollmentsMenu
@@ -416,40 +422,48 @@ public:
 
     UI::addMenuOption ( "1", "View List of Students");
     UI::addMenuOption ( "2", "View List of Courses");
-    UI::addMenuOption ( "3", "Enroll Student To A Course");
+    UI::addMenuOption ( "3", "View List of Course Enrollments");
+    UI::addMenuOption ( "4", "Enroll Student To A Course");  // this is addNew, there's no need for update here
     UI::addMenuOption ( "5", "Remove A Student Course");
+    UI::addMenuOption ( "6", "View Academic Summary");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
+    string menu_label = UI::getMenuLabel(choice);
+ 
+    UI::clearScreen();
+    showBanner();
 
+    UI::showLine(menu_label);
+    UI::showEmptyLine();
+      
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
 
     } else if (choice == "1") {
-      UI::clearScreen();
-      showBanner();
-      
       StudentList::showTable("List of Students");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_enrollments");
      
-    } else if (choice == "2") {
-      UI::clearScreen();
-      showBanner();
-      
-      CourseList::showTable("List of Courses");
-      
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("course_enrollments");
-       
+      UI::showEmptyLine();
+
+    } else if (choice == "6") {
+        UI::clearScreen();
+        showBanner();
+        
+        AcademicTree::showTree();
+        
     } else {
       // default handler
-      showUnderDevelopmentResponse ( "course_enrollments");
+      showUnderDevelopmentResponse ();
     }
+
+    UI::clearInputBuffer();
+    UI::showPressAnyKey();
+    redirectToMenu("course_enrollments");
   }
     
   // showCourseGradesMenu
@@ -460,16 +474,17 @@ public:
 
     UI::initMenuOptions();
 
-    UI::addMenuOption ( "1", "View List of Students");
-    UI::addMenuOption ( "2", "View List of Courses");
+    UI::addMenuOption ( "1", "View List of Course Enrollments");
+    UI::addMenuOption ( "2", "View List of Course Grades");
     UI::addMenuOption ( "3", "Assign New Course Grade");
     UI::addMenuOption ( "4", "Update Student Course Grade");
     UI::addMenuOption ( "5", "Remove an existing Grade");
+    UI::addMenuOption ( "6", "View Academic Summary");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
     string menu_label = UI::getMenuLabel(choice);
-
+ 
     UI::clearScreen();
     showBanner();
 
@@ -510,7 +525,7 @@ public:
     } else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
-      showMenuDebug (choice, choice_label);
+    
      
       redirectToMenu("main");
     } 
@@ -570,13 +585,14 @@ static void updateStudentCourseGrade() {
         CourseGradesList::showTable("List of Student Grades for " + studentData.name);
         UI::showPressAnyKey();
     } else {
-        cout << "Error: Unable to update grade. Please check the entered Course ID." << endl;
-        UI::showPressAnyKey();
+      // default handler
+      showUnderDevelopmentResponse ();
     }
 
+    UI::clearInputBuffer();
+    UI::showPressAnyKey();
     redirectToMenu("course_grades");
-}
-
+  }
 
   // showUsersMenu
   static void showUsersMenu () {
@@ -730,7 +746,7 @@ static void updateStudentCourseGrade() {
   
     } else {
       // default handler
-      showUnderDevelopmentResponse ( "users");
+      showUnderDevelopmentResponse ();
     }
   }
 
@@ -761,9 +777,15 @@ static void updateStudentCourseGrade() {
       AcademicTree::showStudentTree(id);
 
       UI::showEmptyLine();
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("parents");
+
+    } else {
+      // default handler
+      showUnderDevelopmentResponse ();
     }
+  
+    UI::clearInputBuffer();
+    UI::showPressAnyKey();
+    redirectToMenu("users");
   }
+    
 };
