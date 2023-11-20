@@ -19,9 +19,9 @@ vector<vector<string>> table_rows;
 
 // Define a simple struct as an example of data
 struct CourseGrade {
-    string studentID; 
+    string id; 
     string name;
-    string courseID;
+    string course_id;
     int grade_level;
     int mathgrade;
     int chemgrade;
@@ -67,36 +67,36 @@ public:
     }
     
      // StudentGrades
-    static bool exists(const string& studentID) {
-        return course_grades_list.nodeExists(studentID);
+    static bool exists(const string& id) {
+        return course_grades_list.nodeExists(id);
     }
 
 
     // get data
-        static CourseGrade getData(const string& studentID) {
-            bool exists = course_grades_list.nodeExists(studentID);
+        static CourseGrade getData(const string& id) {
+            bool exists = course_grades_list.nodeExists(id);
             Node<CourseGrade>* node;
             CourseGrade data;
             if (exists) {
-                node = course_grades_list.findNode(studentID);
+                node = course_grades_list.findNode(id);
                 data = node->data;
             }
             return data;
         }
 
     // add new 
-    static bool addNew(const string& studentID, const string& name, const int& grade_level, const int& mathgrade, const int& chemgrade, const int& biograde, const int& physicgrade) {
-    bool exists = course_grades_list.nodeExists(studentID);
+    static bool addNew(const string& id, const string& name, const int& grade_level, const int& mathgrade, const int& chemgrade, const int& biograde, const int& physicgrade) {
+    bool exists = course_grades_list.nodeExists(id);
 
     if (!exists) {
-        CourseGrade data = { studentID, name,"", grade_level, mathgrade, chemgrade, biograde, physicgrade };
-        course_grades_list.addNode(studentID, data);
+        CourseGrade data = { id, name,"", grade_level, mathgrade, chemgrade, biograde, physicgrade };
+        course_grades_list.addNode(id, data);
 
-            Student student_data = StudentList::getData(studentID);
+            Student student_data = StudentList::getData(id);
 
         string info = student_data.name + " / Grade: " + to_string(grade_level);
 
-        AcademicTree::addCourseGrade(studentID, to_string(grade_level), name, info);
+        AcademicTree::addCourseGrade(id, to_string(grade_level), name, info);
 
         return true;
     } else {
@@ -104,29 +104,29 @@ public:
     }
 }
     //updateMathGrade
-    static bool updateMathGrade(const string& studentID, const string& courseID, const string& newmathgrade, const int& mathgrade){
-        bool exists = course_grades_list.nodeExists(studentID);
+    static bool updateMathGrade(const string& id, const string& course_id, const string& newmathgrade, const int& mathgrade){
+        bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
-            Node<CourseGrade>* node = course_grades_list.findNode(studentID);
+            Node<CourseGrade>* node = course_grades_list.findNode(id);
             CourseGrade& data = node->data;
 
-            if(data.courseID == "CMAT10"){
+            if(data.course_id == "CMAT10"){
                 string oldmathgrade = to_string(data.mathgrade); 
                 data.mathgrade = stoi(newmathgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldmathgrade + " to " + newmathgrade);
                 return true;
-            }else if(data.courseID == "CMAT11"){
+            }else if(data.course_id == "CMAT11"){
                 string oldmathgrade = to_string(data.mathgrade); 
                 data.mathgrade = stoi(newmathgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldmathgrade + " to " + newmathgrade);
                 return true;
-            }else if(data.courseID == "CMAT12"){
+            }else if(data.course_id == "CMAT12"){
                 string oldmathgrade = to_string(data.mathgrade); 
                 data.mathgrade = stoi(newmathgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldmathgrade + " to " + newmathgrade);
                 return true;
             }else{
@@ -137,29 +137,29 @@ public:
         }
 
     //updateChemGrade
-    static bool updateChemGrade(const string& studentID, const string& courseID, const string& newchemgrade, const int& chemgrade){
-        bool exists = course_grades_list.nodeExists(studentID);
+    static bool updateChemGrade(const string& id, const string& course_id, const string& newchemgrade, const int& chemgrade){
+        bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
-            Node<CourseGrade>* node = course_grades_list.findNode(studentID);
+            Node<CourseGrade>* node = course_grades_list.findNode(id);
             CourseGrade& data = node->data;
 
-            if(data.courseID == "CCHE10"){
+            if(data.course_id == "CCHE10"){
                 string oldchemgrade = to_string(data.chemgrade); 
                 data.chemgrade = stoi(newchemgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldchemgrade + " to " + newchemgrade);
                 return true;
-            }else if(data.courseID == "CCHE11"){
+            }else if(data.course_id == "CCHE11"){
                 string oldchemgrade = to_string(data.chemgrade); 
                 data.chemgrade = stoi(newchemgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldchemgrade + " to " + newchemgrade);
                 return true;
-            }else if(data.courseID == "CCHE12"){
+            }else if(data.course_id == "CCHE12"){
                 string oldchemgrade = to_string(data.chemgrade); 
                 data.chemgrade = stoi(newchemgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldchemgrade + " to " + newchemgrade);
                 return true;
             }else{
@@ -171,29 +171,29 @@ public:
     }
 
     //updateBioGrade
-    static bool updateBioGrade(const string& studentID, const string& courseID, const string& newbiograde, const int& biograde){
-        bool exists = course_grades_list.nodeExists(studentID);
+    static bool updateBioGrade(const string& id, const string& course_id, const string& newbiograde, const int& biograde){
+        bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
-            Node<CourseGrade>* node = course_grades_list.findNode(studentID);
+            Node<CourseGrade>* node = course_grades_list.findNode(id);
             CourseGrade& data = node->data;
 
-            if(data.courseID == "CBIO10" ){
+            if(data.course_id == "CBIO10" ){
                 string oldbiograde = to_string(data.biograde); 
                 data.biograde = stoi(newbiograde);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldbiograde + " to " + newbiograde);
                 return true;
-            }else if(data.courseID == "CBIO11" ){
+            }else if(data.course_id == "CBIO11" ){
                 string oldbiograde = to_string(data.biograde); 
                 data.biograde = stoi(newbiograde);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldbiograde + " to " + newbiograde);
                 return true;
-            }else if(data.courseID == "CBIO12" ){
+            }else if(data.course_id == "CBIO12" ){
                 string oldbiograde = to_string(data.biograde); 
                 data.biograde = stoi(newbiograde);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldbiograde + " to " + newbiograde);
                 return true;
             }else{
@@ -204,29 +204,29 @@ public:
         }
 
     //updatePhysicsGrade
-    static bool updatePhysicsGrade(const string& studentID, const string& courseID, const string& newphysicgrade, const int& physicgrade){
-        bool exists = course_grades_list.nodeExists(studentID);
+    static bool updatePhysicsGrade(const string& id, const string& course_id, const string& newphysicgrade, const int& physicgrade){
+        bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
-            Node<CourseGrade>* node = course_grades_list.findNode(studentID);
+            Node<CourseGrade>* node = course_grades_list.findNode(id);
             CourseGrade& data = node->data;
 
-            if(data.courseID == "CPHY10"){
+            if(data.course_id == "CPHY10"){
                 string oldphysicgrade = to_string(data.physicgrade); 
                 data.physicgrade = stoi(newphysicgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldphysicgrade + " to " + newphysicgrade);
                 return true;
-            }else if(data.courseID == "CPHY11"){
+            }else if(data.course_id == "CPHY11"){
                 string oldphysicgrade = to_string(data.physicgrade); 
                 data.physicgrade = stoi(newphysicgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldphysicgrade + " to " + newphysicgrade);
                 return true;
-            }else if(data.courseID == "CPHY12"){
+            }else if(data.course_id == "CPHY12"){
                 string oldphysicgrade = to_string(data.physicgrade); 
                 data.physicgrade = stoi(newphysicgrade);
-                UI::showLine("Grade for " + data.studentID + " in course " + courseID + " updated from " +
+                UI::showLine("Grade for " + data.id + " in course " + course_id + " updated from " +
                             oldphysicgrade + " to " + newphysicgrade);
                 return true;
             }else{
@@ -236,12 +236,12 @@ public:
             }
         }
     // delete existing
-    static bool remove(const string& studentID) {
-        bool exists = course_grades_list.nodeExists(studentID);
+    static bool remove(const string& id) {
+        bool exists = course_grades_list.nodeExists(id);
 
         if (exists) {
-            course_grades_list.deleteNode(studentID);
-            AcademicTree::removeCourseGrade(studentID);
+            course_grades_list.deleteNode(id);
+            AcademicTree::removeCourseGrade(id);
             return true;
         } else {
             return false;
@@ -259,7 +259,7 @@ public:
     CourseGrade data = node->data;
 
     vector<string> row;
-    row.push_back(data.studentID);
+    row.push_back(data.id);
     row.push_back(data.name);
     row.push_back(to_string(data.grade_level));
     row.push_back(to_string(data.mathgrade));  // Convert int to string
@@ -270,8 +270,8 @@ public:
     table_rows.push_back(row);
 }
     // Update CourseGradesList::showTable
-static bool filterStudentID(const Node<CourseGrade>* node, const string& studentID) {
-    return node->data.studentID == studentID;
+static bool filterid(const Node<CourseGrade>* node, const string& id) {
+    return node->data.id == id;
 }
 
 
@@ -289,15 +289,15 @@ static void showTable(const string& title) {
     UI::showEmptyLine(1);
 }
 
-static void showoneTable(const string& title, const string& studentID) {
+static void showoneTable(const string& title, const string& id) {
     tableInitRows();
 
-    Node<CourseGrade>* studentNode = course_grades_list.findNode(studentID);
+    Node<CourseGrade>* studentNode = course_grades_list.findNode(id);
 
     if (studentNode) {
         tableAddRow(studentNode);  // Add the student's data to the table
     } else {
-        cout << "Error: Student with ID " << studentID << " not found." << endl;
+        cout << "Error: Student with ID " << id << " not found." << endl;
         UI::showPressAnyKey();
         return;  // Return without showing the table if the student is not found
     }

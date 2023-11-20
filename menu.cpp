@@ -406,8 +406,7 @@ public:
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_enrollments");
-       
-    } else {
+    }else {
       // default handler
       string choice_label = UI::getMenuLabel (choice);
       showMenuDebug (choice, choice_label);
@@ -440,27 +439,92 @@ public:
     UI::showLine(menu_label);
     UI::showEmptyLine();
 
-
-
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
 
     } else if (choice == "1") {
       UI::clearScreen();
-              showBanner();
-              CourseGradesList::showTable("Table of Student Grades");  
-              UI::clearInputBuffer();
-              UI::showPressAnyKey();
-              redirectToMenu("course_grades");
-     
+      showBanner();
+      
+      StudentList::showTable("List of Students");
+      
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectToMenu("course_grades");
+
     } else if (choice == "2") {
+      UI::clearScreen();
+      showBanner();
+      
       CourseList::showTable("List of Courses");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_grades");
-       
+
+    } else if (choice == "3") {
+      UI::clearScreen();
+              showBanner();
+              CourseGradesList::showTable("Table of Student Grades");  
+              UI::clearInputBuffer();
+              UI::showPressAnyKey();
+              redirectToMenu("course_grades");
+    
+    } else if (choice == "4") {
+      updateStudentCourseGrade(); 
+            
+    } else if (choice == "5") {
+            
+    } else {
+      // default handler
+      string choice_label = UI::getMenuLabel (choice);
+      showMenuDebug (choice, choice_label);
+     
+      redirectToMenu("main");
+    } 
+  }
+static void updateStudentCourseGrade() {
+    UI::clearScreen();
+    showBanner();
+    cout << "Update Student Course Grade" << endl;
+
+    string id, course_id;
+    int newGrade, newmathgrade, newbiograde, newchemgrade, newphysicgrade;
+
+
+    cout << "Enter Student ID: ";
+    cin >> id;
+
+    // Check if the student exists
+    if (!CourseGradesList::exists(id)) {
+        cout << "Error: Student with ID " << id << " not found." << endl;
+        UI::showPressAnyKey();
+        redirectToMenu("course_grades");
+        return;
+    }
+
+    CourseGrade studentData = CourseGradesList::getData(id);
+    CourseGradesList::showTable("List of Student Grades for " + studentData.name);
+
+    cout << "Enter Course ID to update grade: ";
+    cin >> course_id;
+
+    // Collect new grade
+    cout << "Enter New Grade for " << course_id << ": ";
+    cin >> newGrade;
+
+    // Update the grade
+    bool updated = false;
+
+    if (course_id.find("CMAT") != string::npos) {
+        updated = CourseGradesList::updateMathGrade(id, course_id, to_string(newGrade),newmathgrade );
+    } else if (course_id.find("CBIO") != string::npos) {
+        updated = CourseGradesList::updateBioGrade(id, course_id, to_string(newGrade), newbiograde);
+    } else if (course_id.find("CCHE") != string::npos) {
+        updated = CourseGradesList::updateChemGrade(id, course_id, to_string(newGrade), newchemgrade);
+    } else if (course_id.find("CPHY") != string::npos) {
+        updated = CourseGradesList::updatePhysicsGrade(id, course_id, to_string(newGrade), newphysicgrade);
     } else {
         cout << "Error: Invalid Course ID." << endl;
         UI::showPressAnyKey();
@@ -468,7 +532,7 @@ public:
         return;
     }
 
-     if (updated) {
+    if (updated) {
         // Show the updated table of grades for the student
         UI::clearScreen();
         showBanner();
