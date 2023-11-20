@@ -424,12 +424,23 @@ public:
 
     UI::initMenuOptions();
 
-    UI::addMenuOption ( "1", "View Academic Summary");
-    UI::addMenuOption ( "2", "View Student Academic Information");
-    UI::addMenuOption ( "3", "Update Student Grade");
+    UI::addMenuOption ( "1", "View List of Students");
+    UI::addMenuOption ( "2", "View List of Courses");
+    UI::addMenuOption ( "3", "Assign New Course Grade");
+    UI::addMenuOption ( "4", "Update Student Course Grade");
+    UI::addMenuOption ( "5", "Remove an existing Grade");
     UI::addMenuOption ( "0", "Back to Main Menu");
 
     string choice = UI::showMenuOptions(menuTitle);
+    string menu_label = UI::getMenuLabel(choice);
+
+    UI::clearScreen();
+    showBanner();
+
+    UI::showLine(menu_label);
+    UI::showEmptyLine();
+
+
 
     // menu handler
     if (choice == "0") {
