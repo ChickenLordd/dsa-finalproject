@@ -24,41 +24,9 @@ public:
 
 class Tree {
 public:
-    // static void printPath(const vector<TreeNode*>& vec) {
-    //     for (size_t i = 0; i < vec.size(); i++) {
-    //         string type = vec[i]->type;
-    //         string id = vec[i]->id;
-    //         cout << "(" << type << ":" << id << ") ";
-    //     }
-    //     cout << endl;
-    // }
 
-    // static void printAllRootToLeafPaths(TreeNode* root, vector<TreeNode*>& vec) {
-    //     if (!root)
-    //         return;
-
-    //     vec.push_back(root);
-
-    //     if (root->child.empty()) {
-    //         printPath(vec);
-    //         vec.pop_back();
-    //         return;
-    //     }
-
-    //     for (size_t i = 0; i < root->child.size(); i++)
-    //         printAllRootToLeafPaths(root->child[i], vec);
-
-    //     vec.pop_back();
-    // }
-
-    // static void printAllRootToLeafPaths(TreeNode* root) {
-    //     if (!root)
-    //         return;
-
-    //     vector<TreeNode*> vec;
-    //     printAllRootToLeafPaths(root, vec);
-    // }
-
+    // findNode: this will do a recursive search to find a node thta has type & id
+    // usually you pass root (the topmost node) as parent
     static TreeNode* findNode(TreeNode* parent, const string& type, const string& id) {
         if (!parent)
             return nullptr;

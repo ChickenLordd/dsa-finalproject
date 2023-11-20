@@ -101,17 +101,17 @@ public:
     }
 
     // showInputTextLine (can contain spaces)
-    // it may need clearInputBuffer(); before, depending in the case if after another std::cin
+    // it may need clearInputBuffer(); before, depending in the case if after another cin
     static string showInputTextLine(const string& label, int padding) {
         cout << strPadEnd(label, padding) << ": ";
         string input;
 
         // Peek at the next character
-        int nextChar = std::cin.peek();
+        int nextChar = cin.peek();
         // Check if it's a newline character
         if (nextChar == '\n') {
             // Ignore the newline character
-            std::cin.ignore();
+            cin.ignore();
         }
 
         // read user input
@@ -335,9 +335,9 @@ public:
         char buffer[12]; // To store "DD-Mon-YYYY\0"
         strftime(buffer, 12, "%d %b %Y", timeinfo);
 
-        return std::string(buffer);
+        return string(buffer);
     }
-    
+
     // showEmptyLine
     static void showEmptyLine(int lines = 1) {
         for (int i = 0; i < lines; ++i) {
@@ -351,6 +351,19 @@ public:
             cout << character;
         }
         cout << endl;
+    }
+
+    // string display
+    static void showLine (const string& line) {
+        cout << line << endl;
+    }
+
+    // showLines (display array of strings)
+    template <size_t N>
+    static void showLines(const string (&lines)[N]) {
+        for (size_t i = 0; i < N; i++) {
+            cout << lines[i] << endl;
+        }
     }
 
     // string trim
@@ -383,16 +396,31 @@ public:
         return spaces + trimmed;
     }
 
-    static void showLine (const string& line) {
-        cout << line << endl;
-    }
+    // string replace
+    static string strReplace(const string& str, const string& find, const string& replace = "") {
+        // If the replacement string is empty, simply remove occurrences of the 'find' string
+        if (replace.empty()) {
+            size_t pos = 0;
+            string result = str;
 
-    // showLines (display array of strings)
-    template <size_t N>
-    static void showLines(const string (&lines)[N]) {
-        for (size_t i = 0; i < N; i++) {
-            cout << lines[i] << endl;
+            while ((pos = result.find(find, pos)) != string::npos) {
+                result.erase(pos, find.length());
+            }
+
+            return result;
         }
+
+        // Otherwise, perform the standard replacement logic
+        size_t pos = 0;
+        string result = str;
+
+        while ((pos = result.find(find, pos)) != string::npos) {
+            result.replace(pos, find.length(), replace);
+            pos += replace.length();
+        }
+
+        return result;
+
     }
 
 

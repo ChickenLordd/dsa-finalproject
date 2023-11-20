@@ -39,22 +39,6 @@ public:
         }
     }
 
-
-    // To gethead
-Node<T>* getHead() const {
-        return head;
-    }
-// filter nodes based on a predicate and apply a callback function to each node
-    template <class Predicate, class Callback>
-    void filterNodes(Predicate predicate, Callback callback) {
-        Node<T>* current = head;
-        while (current != nullptr) {
-            if (predicate(current->data)) {
-                callback(current);
-            }
-            current = current->next;
-        }
-    }
     // Method to delete a node by id
     void deleteNode(const string& id) {
         if (!head) {
