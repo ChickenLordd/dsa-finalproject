@@ -491,6 +491,15 @@ public:
     UI::showLine(menu_label);
     UI::showEmptyLine();
 
+    // init grade options to be used later in some cases
+    string choiceLabel = "Choose Course Grade";
+    UI::initChoices();
+    UI::addChoice("A", "Grade A");
+    UI::addChoice("B", "Grade B");
+    UI::addChoice("C", "Grade C");
+    UI::addChoice("D", "Grade D");
+    UI::addChoice("F", "Grade F");   
+
     // menu handler
     if (choice == "0") {
       redirectToMenu("main");
@@ -503,87 +512,95 @@ public:
       redirectToMenu("course_grades");
      
     } else if (choice == "2") {
-      CourseList::showTable("List of Courses");
+      CourseList::showTable("List of Course Enrollments");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_grades");
 
     } else if (choice == "3") {
-      UI::clearScreen();
-              showBanner();
-              CourseGradesList::showTable("Table of Student Grades");  
-              UI::clearInputBuffer();
-              UI::showPressAnyKey();
-              redirectToMenu("course_grades");
+      string id = UI::showInputText ("Enter Course Grade Id", 20); // no spaces capture
+      if (CourseGradeList::exists(id)) {
+        UI::showLine ("Course Grade Id already exists.");
+        UI::clearInputBuffer();
+        UI::showEmptyLine();
     
-    } else if (choice == "4") {
-      updateStudentCourseGrade(); 
-            
-    } else if (choice == "5") {
-            
     } else {
-      // default handler
-      string choice_label = UI::getMenuLabel (choice);
-    
+      // grade whould be linked to enrollment id
+      // course_enrollment_id will become course_grade_id
+        UI::showEmptyLine();
      
-      redirectToMenu("main");
-    } 
-  }
-static void updateStudentCourseGrade() {
-    UI::clearScreen();
-    showBanner();
-    cout << "Update Student Course Grade" << endl;
-
-    string id, course_id;
-    int newGrade, newmathgrade, newbiograde, newchemgrade, newphysicgrade;
-
-
-    cout << "Enter Student ID: ";
-    cin >> id;
-
-    // Check if the student exists
-    if (!CourseGradesList::exists(id)) {
-        cout << "Error: Student with ID " << id << " not found." << endl;
-        UI::showPressAnyKey();
-        redirectToMenu("course_grades");
-        return;
+        if (!CourseEnrollmentList::exists(id)) {
+          UI::showLine ("Course Grade Id should be an existing Course Enrollment Id.");
+        } else {
+          // string grade = UI::showInputText ("Enter Course Grade", 20); 
+          string grade = UI::showChoices(choiceLabel, 20);
+      
+          bool success = CourseGradeList::addNew (id, grade);
+          if (success) {
+            UI::showEmptyLine();
+            UI::showLine ("New Record added.");
+            UI::showEmptyLine();
+            CourseGradeList::showRecord ( id);
+          } else {
+            UI::showEmptyLine();
+            UI::showLine ("Record not added.");
+          }
+        }
     }
+            
+    } else if ( (choice == "4") || choice == "5") {
+            
+    // all these choices needs an id to operate on
+      string id = UI::showInputText ("Enter Course Grade Id", 20); // no spaces capture
+ 
+      if (!CourseGradeList::exists(id)) {
+        UI::showEmptyLine();
+        UI::showLine ("Course Grade Id not found.");
+      
+      } else {
+        UI::showEmptyLine();
+      
+        // 3 or 4 (before update or remove, show old data)
+        CourseGradeList::showRecord(id);
+        UI::showEmptyLine();
 
-    CourseGrade studentData = CourseGradesList::getData(id);
-    CourseGradesList::showTable("List of Student Grades for " + studentData.name);
+        if (choice == "4") {
+          // update
+          UI::showLine ("Enter information to update:");
+          UI::showEmptyLine();
 
-    cout << "Enter Course ID to update grade: ";
-    cin >> course_id;
+          // string grade = UI::showInputText ("Enter Course Grade", 20); 
+          string grade = UI::showChoices(choiceLabel, 20);
+    
+          bool success = CourseGradeList::update (id, grade);
+          if (success) {
+            UI::showEmptyLine();
+            UI::showLine("Record updated.");
+            UI::showEmptyLine();
+            CourseGradeList::showRecord ( id);
+          } else {
+            UI::showEmptyLine();
+            UI::showLine ("Record not updated.");
+          }
 
-    // Collect new grade
-    cout << "Enter New Grade for " << course_id << ": ";
-    cin >> newGrade;
+        } else if (choice == "5") {
+          // remove
+          UI::showLine ("Are you sure?");
+          
+          string sure = UI::showInputText ("Please answer (y if sure)", 20); 
+          if (sure == "y") {
+            CourseGradeList::remove(id);
+            UI::showEmptyLine();
+            UI::showLine ("Record deleted.");
+          }
+        }
+     }
 
-    // Update the grade
-    bool updated = false;
-
-    if (course_id.find("CMAT") != string::npos) {
-        updated = CourseGradesList::updateMathGrade(id, course_id, to_string(newGrade),newmathgrade );
-    } else if (course_id.find("CBIO") != string::npos) {
-        updated = CourseGradesList::updateBioGrade(id, course_id, to_string(newGrade), newbiograde);
-    } else if (course_id.find("CCHE") != string::npos) {
-        updated = CourseGradesList::updateChemGrade(id, course_id, to_string(newGrade), newchemgrade);
-    } else if (course_id.find("CPHY") != string::npos) {
-        updated = CourseGradesList::updatePhysicsGrade(id, course_id, to_string(newGrade), newphysicgrade);
-    } else {
-        cout << "Error: Invalid Course ID." << endl;
-        UI::showPressAnyKey();
-        redirectToMenu("course_grades");
-        return;
-    }
-
-    if (updated) {
-        // Show the updated table of grades for the student
-        UI::clearScreen();
-        showBanner();
-        CourseGradesList::showTable("List of Student Grades for " + studentData.name);
-        UI::showPressAnyKey();
+    UI::showEmptyLine();
+    } else if (choice == "6") {
+      AcademicTree::showTree();
+ 
     } else {
       // default handler
       showUnderDevelopmentResponse ();
