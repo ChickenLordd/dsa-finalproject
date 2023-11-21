@@ -24,10 +24,6 @@ struct Student {
 };
 
 LinkedList<Student> student_list;
-// Data type: LinkedList
-// Node type: Student
-// Variable name: student_list 
-
    
 class StudentList {
 
@@ -48,7 +44,6 @@ public:
         addNew("S007", "Francis", 12, "Denpasar");
         addNew("S008", "George", 12, "Bogor");
         addNew("S009", "Kaleb", 12, "Bandung");
-
     }
 
     // exists

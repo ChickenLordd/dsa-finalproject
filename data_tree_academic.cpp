@@ -34,6 +34,10 @@ void displayNode(TreeNode* TreeNode, int level) {
         } else if (TreeNode->type == "student") {
             cout << TreeNode->data << endl;
 
+        } else if (TreeNode->type == "course_grade") {
+            string course_grade_id =  UI::strReplace(TreeNode->id , ":grade", ""); // make it shown as orginal course_grade_id (as ":grade" was added only to make a unique tree node id)
+            cout << course_grade_id << " - " << TreeNode->data << endl;
+
         } else {
             cout << TreeNode->id << " - " << TreeNode->data << endl;
         }
@@ -62,6 +66,7 @@ public:
         UI::showLine ("Academic Summary Information (Tree)");
         // Traverse the tree and display nodes with indentation using the callback function
         Tree::traverse(start_node, displayNode);
+        UI::showEmptyLine();
     }
 
     // showTreeDebug
@@ -69,6 +74,7 @@ public:
         UI::showLine ("DEBUG :: Academic Summary Information (Tree)");
         // Traverse the tree and display nodes with indentation using the callback function
         Tree::traverse(start_node, displayNodeDebug);
+        UI::showEmptyLine();
     }
 
     // showStudentTree
@@ -78,6 +84,8 @@ public:
             UI::showLine ("Student Academic Summary Information (Tree)");
             UI::showEmptyLine(1);
             Tree::traverse(start_node, displayNode);
+            UI::showEmptyLine();
+
         } else {
             UI::showEmptyLine(1);
             UI::showLine ("Student with ID: " + id + " is not found");
@@ -99,6 +107,7 @@ public:
         p_node->addChild (c_node);
     }
 
+    // STUDENTS
     // addStudent
     static void addStudent (const int& grade_level, const string& student_id, const string& data="") {
         // parent to find
@@ -123,6 +132,11 @@ public:
         c_node->data = data;
     }
 
+    // removeStudent
+    static void removeStudent ( const string& student_id ) {
+        Tree::removeNode (academic_root, "student", student_id );
+    }
+
     // COURSE ENROLLMENTS
     // addCourseEnrollment: course_enrollment_id = student_id + ":" + course_id (see data_class_course_enrollments)
     static void addCourseEnrollment (const string& student_id, const string& course_enrollment_id, const string& data="") {
@@ -138,33 +152,43 @@ public:
         addChildToParentNode ( p_node_type, p_node_id, c_node_type, c_node_id, data );
     }
 
-    // addCourseGrade
-static void addCourseGrade(const string& student_id, const string& course_id, const string& course_grade_id, const string& data) {
-    // parent to find
-    string p_node_type = "student";
-    string p_node_id = student_id;
-
-    // child to attach
-    string c_node_type = "course";
-    string c_node_id = course_id + ":" + course_grade_id;
-
-    // attach
-    addChildToParentNode(p_node_type, p_node_id, c_node_type, c_node_id, data);
-}
-// removeCourseGrade
-static void removeCourseGrade(const string& course_grade_id) {
-    Tree::removeNode(academic_root, "course", course_grade_id);
-}
-
-    // removeStudent
-    static void removeStudent ( const string& student_id ) {
-        Tree::removeNode (academic_root, "student", student_id );
-    }
-
     // removeCourseEnrollment
     static void removeCourseEnrollment ( const string& course_enrollment_id ) {
         Tree::removeNode (academic_root, "course_enrollment", course_enrollment_id );
     }
+    
+    // COURSE GRADE
+    // addCourseGrade
+    static void addCourseGrade (const string& course_grade_id, const string& data="") {
+        // course_grade_id is the same as course_enrollment_id
+        string course_enrollment_id = course_grade_id;
 
+        // parent to find
+        string p_node_type = "course_enrollment";
+        string p_node_id = course_enrollment_id; 
+
+        // child to attach
+        string c_node_type = "course_grade";
+        string c_node_id = course_grade_id + ":grade"; // make it unique for a tree node (cannot have the exact same node id as enrollment)
+
+        // attach
+        addChildToParentNode ( p_node_type, p_node_id, c_node_type, c_node_id, data );
+    }
+
+    // updateCourseGrade
+    static void updateCourseGrade (const string& course_grade_id, const string& data="") {
+        // node to update
+        string c_node_type = "course_grade";
+        string c_node_id = course_grade_id + ":grade"; // make it unique for a tree node (cannot have the exact same node id as enrollment)
+        
+        TreeNode* c_node = Tree::findNode (academic_root, c_node_type, c_node_id);
+        c_node->data = data;
+    }
+
+    // removeCourseGrade
+    static void removeCourseGrade ( const string& course_grade_id ) {
+        Tree::removeNode (academic_root, "course_grade", course_grade_id + ":grade" );
+    }
+    
     
 };

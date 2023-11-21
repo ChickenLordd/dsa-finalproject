@@ -24,8 +24,7 @@ int main() {
     StudentList::init();
     CourseList::init();
     CourseEnrollmentList::init();
-    CourseGradesList::init();
-    // CourseGradeList::init();
+    CourseGradeList::init();
     UserList::init();
 
     // show menu
