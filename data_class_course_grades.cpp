@@ -38,24 +38,24 @@ public:
     static void init() {
 
         // Create initial data nodes
-        // node id should be unique, so it's better to combine student id & course id (separated by colon for readability)
+        // node id should be unique, for readability
 
         addNew("S001:CMAT10", "A");
-        // addNew("S001:CBIO10", "C");
+        addNew("S001:CBIO10", "C");
         addNew("S001:CPHY10", "B");
-        // addNew("S001:CCHE10", "D");
+        addNew("S001:CCHE10", "D");
     
         addNew("S002:CMAT10", "B");
-        // addNew("S002:CBIO10", "A");
-        // addNew("S002:CPHY10", "C");
+        addNew("S002:CBIO10", "A");
+        addNew("S002:CPHY10", "C");
         addNew("S002:CCHE10", "A");
     
-        // addNew("S004:CMAT11", "C");
+       // addNew("S004:CMAT11", "C");
         addNew("S004:CBIO11", "B");
         addNew("S004:CPHY11", "A");
-        // addNew("S004:CCHE11", "D");
+       // addNew("S004:CCHE11", "D");
     
-        // addNew("S005:CMAT11", "A");
+        addNew("S005:CMAT11", "A");
         // addNew("S005:CBIO11", "B");
         addNew("S005:CPHY11", "A");
         addNew("S005:CCHE11", "C");
@@ -63,12 +63,12 @@ public:
         // addNew("S007CMAT12", "B");
         // addNew("S007CBIO12", "D");
         addNew("S007:CPHY12", "C");
-        addNew("S007:CCHE12", "A");
+       addNew("S007:CCHE12", "A");
 
         addNew("S008:CMAT12", "C");
         addNew("S008:CBIO12", "A");
         // addNew("S008CPHY12", "B");
-        // addNew("S008CCHE12", "D");
+       // addNew("S008CCHE12", "D");
     }
 
     // add new 
@@ -165,7 +165,7 @@ public:
 
             UI::showLine ( UI::strPadEnd ( "Id", padding) + ": " + data.id );
             UI::showLine ( UI::strPadEnd ( "Student Id", padding) + ": " + data.student_id );
-            UI::showLine ( UI::strPadEnd ( "Student Name", padding) + ": " + data.student_id );
+            UI::showLine ( UI::strPadEnd ( "Student Name", padding) + ": " + data.student_name );
             UI::showLine ( UI::strPadEnd ( "Course Id", padding) + ": " + data.course_id );
             UI::showLine ( UI::strPadEnd ( "Course Name", padding) + ": " + data.course_name );
             UI::showLine ( UI::strPadEnd ( "Course Grade", padding) + ": " + data.grade );
@@ -197,7 +197,6 @@ public:
     static void showTable(const string& title) {
         tableInitRows();
 
-        // use anonymous callback function to build rows
         // add row one by one per node
         course_grade_list.traverse ( tableAddRow );
 

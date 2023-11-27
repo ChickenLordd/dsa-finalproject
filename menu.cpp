@@ -505,29 +505,29 @@ public:
       redirectToMenu("main");
 
     } else if (choice == "1") {      
-      StudentList::showTable("List of Students");
+      CourseEnrollmentList::showTable("List of Course Enrollments");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_grades");
      
     } else if (choice == "2") {
-      CourseList::showTable("List of Course Enrollments");
+      CourseGradeList::showTable("List of Course Grades");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
       redirectToMenu("course_grades");
 
-    } else if (choice == "3") {
+    } else if (choice == "3") {  
       string id = UI::showInputText ("Enter Course Grade Id", 20); // no spaces capture
       if (CourseGradeList::exists(id)) {
         UI::showLine ("Course Grade Id already exists.");
         UI::clearInputBuffer();
         UI::showEmptyLine();
     
-    } else {
-      // grade whould be linked to enrollment id
-      // course_enrollment_id will become course_grade_id
+      } else {
+        // grade would be linked to enrollment id
+        // course_enrollment_id will become course_grade_id
         UI::showEmptyLine();
      
         if (!CourseEnrollmentList::exists(id)) {
@@ -547,11 +547,11 @@ public:
             UI::showLine ("Record not added.");
           }
         }
-    }
-            
+
+      }
+ 
     } else if ( (choice == "4") || choice == "5") {
-            
-    // all these choices needs an id to operate on
+      // all these choices needs an id to operate on
       string id = UI::showInputText ("Enter Course Grade Id", 20); // no spaces capture
  
       if (!CourseGradeList::exists(id)) {
@@ -598,6 +598,7 @@ public:
      }
 
     UI::showEmptyLine();
+
     } else if (choice == "6") {
       AcademicTree::showTree();
  

@@ -20,9 +20,10 @@ vector<vector<string> > table_rows;
 struct CourseEnrollment {
     string id; // for easier to remember strategy, should be a concat of student_id & course_id
     string student_id;
+    string student_name; // will be auto populated in addNew or update if exists
     string course_id;
-    string student_name;
-    string course_name;
+    string course_name; // will be auto populated in addNew or update if exists
+ 
 };
 
 LinkedList<CourseEnrollment> course_enrollment_list;
@@ -38,13 +39,13 @@ public:
         // node id should be unique, so it's better to combine student id & course id (separated by colon for readability)
 
         addNew("S001:CMAT10", "S001", "CMAT10");
-        // addNew("S001:CBIO10", "S001", "CBIO10");
+        addNew("S001:CBIO10", "S001", "CBIO10");
         addNew("S001:CPHY10", "S001", "CPHY10");
-        // addNew("S001:CCHE10", "S001", "CCHE10");
+        addNew("S001:CCHE10", "S001", "CCHE10");
     
         addNew("S002:CMAT10", "S002", "CMAT10");
-        // addNew("S002:CBIO10", "S002", "CBIO10");
-        // addNew("S002:CPHY10", "S002", "CPHY10");
+        addNew("S002:CBIO10", "S002", "CBIO10");
+        addNew("S002:CPHY10", "S002", "CPHY10");
         addNew("S002:CCHE10", "S002", "CCHE10");
     
         // addNew("S004:CMAT11", "S004", "CMAT11");
@@ -52,7 +53,7 @@ public:
         addNew("S004:CPHY11", "S004", "CPHY11");
         // addNew("S004:CCHE11", "S004", "CCHE11");
     
-        // addNew("S005:CMAT11", "S005", "CMAT11");
+        addNew("S005:CMAT11", "S005", "CMAT11");
         // addNew("S005:CBIO11", "S005", "CBIO11");
         addNew("S005:CPHY11", "S005", "CPHY11");
         addNew("S005:CCHE11", "S005", "CCHE11");
@@ -73,12 +74,13 @@ public:
         bool exists = course_enrollment_list.nodeExists (id);
 
         if (!exists) {
-            CourseEnrollment data = {id, student_id, course_id};
-            course_enrollment_list.addNode (id, data);
-            
+         // get student & course data to populate names            
             Student student_data = StudentList::getData(student_id);
             Course course_data = CourseList::getData(course_id);
 
+            CourseEnrollment data = {id, student_id, student_data.name, course_id, course_data.name};
+            course_enrollment_list.addNode (id, data);
+         
             string info = student_data.name + " / " + course_data.name;
 
             // should add course to tree (under student)
@@ -89,6 +91,8 @@ public:
             return false; // node with the same id already exists
         }
     }
+
+    // update :: enrollment does NOT need an update, just remove and addNew if you made a mistaken enrollment
 
     // delete existing
     static bool remove (const string& id) {
@@ -134,6 +138,7 @@ public:
         row.push_back (data.id);
         row.push_back (data.student_id);
         row.push_back (data.course_id);
+        row.push_back (data.course_name);
 
         table_rows.push_back(row); // add to rows
     }
@@ -145,9 +150,9 @@ public:
         // add row one by one per node
         course_enrollment_list.traverse ( tableAddRow );
 
-        const string headers[] = {"Id", "Student Id", "Course Id"};
-        int col_sizes[] = {6, 10, 10};
-        int num_cols = 3;
+        const string headers[] = {"Id", "Student Id", "Course Id", "Course Name"};
+        int col_sizes[] = {15, 10, 10, 20};
+        int num_cols = 4;
     
         // exit(EXIT_SUCCESS);
 
