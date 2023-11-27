@@ -21,6 +21,8 @@ struct CourseEnrollment {
     string id; // for easier to remember strategy, should be a concat of student_id & course_id
     string student_id;
     string course_id;
+    string student_name;
+    string course_name;
 };
 
 LinkedList<CourseEnrollment> course_enrollment_list;
