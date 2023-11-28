@@ -53,11 +53,30 @@ public:
             Course data = {id, name};
             course_list.addNode (id, data);
             
-            // should add course to tree (under student)
+            // no need to add course to tree (under student)
             
             return true;
         } else {
             return false; // node with the same id already exists
+        }
+    }
+
+    // only to update name
+    // never update id, if you want to update id, remove and addNew
+    static bool update (const string& id, const string& name) {
+        bool exists = course_list.nodeExists (id);
+
+        if (!exists) {
+            return false; //node does not exists
+        } else {
+            Course old_data = getData(id);
+            Course updated_data = {id, name};
+
+            Node<Course>* node;
+            node = course_list.findNode(id);
+            node->data = updated_data;
+
+            return true;
         }
     }
 
@@ -70,6 +89,21 @@ public:
             return true;
         } else {
             return false; // node with that id does not exists
+        }
+    }
+
+    //display record
+    static void showRecord (const string& id) {
+        bool exists = course_list.nodeExists (id);
+
+        if (exists) {
+            Course data = getData(id);
+            int padding = 15;
+
+            UI::showLine (UI::strPadEnd ("Id",padding) + ": " + data.id);
+            UI::showLine (UI::strPadEnd ("Name", padding) + ": " + data.name);
+        } else {
+            UI::showLine ("Not found.");
         }
     }
 

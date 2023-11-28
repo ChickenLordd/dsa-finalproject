@@ -402,6 +402,77 @@ public:
 
       UI::showEmptyLine();
 
+      } else if (choice == "2") {
+      string id = UI::showInputText ("EnterCourse Id", 20);
+      if (CourseList::exists(id)) {
+        UI::showLine ("Course Id already exists.");
+        UI::clearInputBuffer();
+        UI::showEmptyLine();
+
+      } else {
+        string name = UI::showInputTextLine ("Enter Name", 20);
+
+        UI::showEmptyLine();
+
+        bool success = CourseList::addNew (id, name);
+        if (success) {
+          UI::showEmptyLine();
+          UI::showLine ("New Record added.");
+          UI::showEmptyLine();
+          CourseList::showRecord (id);
+        } else {
+          UI::showEmptyLine();
+          UI::showLine ("Record not added.");
+        }
+      }
+
+    } else if ((choice == "3") || choice == "4") {
+      string id = UI::showInputText ("Enter Course Id", 20);
+
+      if (!CourseList::exists(id)) {
+        UI::showEmptyLine();
+        UI::showLine ("Course Id not found.");
+
+      } else {
+        UI::showEmptyLine();
+
+        // 3 or 4 (before update or remove, show old data)
+        CourseList::showRecord(id);
+        UI::showEmptyLine();
+
+        if (choice == "3") {
+          // update
+          UI::showLine ("Enter information to update:");
+          UI::showEmptyLine();
+
+          string new_name = UI::showInputTextLine ("Enter Name", 20);
+
+          bool success = CourseList::update (id, new_name);
+          if (success) {
+            UI::showEmptyLine();
+            UI::showLine ("Record updated.");
+            UI::showEmptyLine();
+            CourseList::showRecord (id);
+          } else {
+            UI::showEmptyLine();
+            UI::showLine ("Record not updated.");
+          }
+
+        } else if (choice == "4") {
+          // remove
+          UI::showLine ("Are you sure?");
+
+          string sure = UI::showInputText ("Please answer (y if sure)", 20);
+          if (sure == "y") {
+            CourseList::remove(id);
+            UI::showEmptyLine();
+            UI::showLine ("Record deleted.");
+          }
+        }
+      }
+
+      UI::showEmptyLine();
+
     } else {
       // default handler
       showUnderDevelopmentResponse ();
