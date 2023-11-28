@@ -1,5 +1,7 @@
 #pragma once
 
+#include "iostream"
+#include <string>
 #include "base_class_linkedlist.cpp"
 #include "base_class_ui.cpp"
 #include "data_class_students.cpp"
@@ -160,5 +162,63 @@ public:
         UI::showTable(title, headers, table_rows, col_sizes, num_cols);
         UI::showEmptyLine(1);
     }
-    
+    class CourseEnrollmentList {
+public:
+    // ... (existing code)
+
+    // Enroll Student in a new Course
+    static void enrollStudentInCourse() {
+        string studentId, courseId;
+
+        // Prompt for student ID
+        UI::showMessage("Enter Student ID: ");
+        UI::getStringInput(studentId);
+
+        // Prompt for course ID
+        UI::showMessage("Enter Course ID: ");
+        UI::getStringInput(courseId);
+
+        // Check if student and course exist
+        if (StudentList::exists(studentId) && CourseList::exists(courseId)) {
+            // Combine student and course IDs to create enrollment ID
+            string enrollmentId = studentId + ":" + courseId;
+
+            // Check if the enrollment already exists
+            if (!exists(enrollmentId)) {
+                // Add the new enrollment
+                addNew(enrollmentId, studentId, courseId);
+                UI::showMessage("Enrollment successful!");
+            } else {
+                UI::showErrorMessage("Enrollment already exists for the given student and course.");
+            }
+        } else {
+            UI::showErrorMessage("Student or Course not found. Please check the IDs and try again.");
+        }
+    }
+
+    // Remove a Student from Course
+    static void removeStudentFromCourse() {
+        string enrollmentId;
+
+        // Prompt for enrollment ID
+        UI::showMessage("Enter Enrollment ID: ");
+        UI::getStringInput(enrollmentId);
+
+        // Check if the enrollment exists
+        if (exists(enrollmentId)) {
+            // Remove the enrollment
+            remove(enrollmentId);
+            UI::showMessage("Student removed from the course.");
+        } else {
+            UI::showErrorMessage("Enrollment not found. Please check the ID and try again.");
+        }
+    }
+
+    // Back to Main Menu
+    static void backToMainMenu() {
+        // Add any cleanup or additional logic if needed
+        UI::clearScreen();
+        UI::showMessage("Returning to the main menu...\n");
+    }
+};
 };
