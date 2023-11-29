@@ -168,42 +168,11 @@ public:
 
         // use anonymous callback function to build rows
         // add row one by one per node
-        
-        CourseEnrollment.traverse ( tableAddRow );
+        course_enrollment_list.traverse ( tableAddRow );
 
         const string headers[] = {"Id", "Student Id", "Student Name", "Course Id", "Course Name"};
-        int colWidth[5] = {15, 10, 20, 10, 20};
+        int colWidth[] = {15, 10, 20, 10, 20};
         int numCols = 5;
-
-        // Enroll Student in a new Course
-    static void enrollStudentInCourse() {
-        string studentId, courseId;
-
-        // Prompt for student ID
-        UI::showMessage("Enter Student ID: ");
-        UI::getStringInput(studentId);
-
-        // Prompt for course ID
-        UI::showMessage("Enter Course ID: ");
-        UI::getStringInput(courseId);
-
-        // Check if student and course exist
-        if (StudentList::exists(studentId) && CourseList::exists(courseId)) {
-            // Combine student and course IDs to create enrollment ID
-            string enrollmentId = studentId + ":" + courseId;
-
-            // Check if the enrollment already exists
-            if (!exists(enrollmentId)) {
-                // Add the new enrollment
-                addNew(enrollmentId, studentId, courseId);
-                UI::showMessage("Enrollment successful!");
-            } else {
-                UI::showErrorMessage("Enrollment already exists for the given student and course.");
-            }
-        } else {
-            UI::showErrorMessage("Student or Course not found. Please check the IDs and try again.");
-        }
-    }
     
         // exit(EXIT_SUCCESS);
 
