@@ -140,360 +140,17 @@ public:
   }  
 
   // showMainMenu
-  static void showMainMenu () {
+// showCourseEnrollmentsMenu
+  static void showCourseEnrollmentsMenu () {
     showBanner();
 
-    string menuTitle = "Main Menu";
-
-    UI::initMenuOptions();
-
-    UI::addMenuOption ( "1", "View Academic Summary");
-    UI::addMenuOption ( "2", "Manage Students");
-    UI::addMenuOption ( "3", "Manage Courses");
-    UI::addMenuOption ( "4", "Manage Course Enrollments");
-    UI::addMenuOption ( "5", "Manage Student Course Grades");
-    UI::addMenuOption ( "6", "Manage User Access");
-    UI::addMenuOption ( "0", "Sign Out");
-
-    string choice = UI::showMenuOptions(menuTitle);
-
-    // menu handler
-    if (choice == "0") {
-      showLogin();
-    } else if (choice == "1") {
-        UI::clearScreen();
-        showBanner();
-        
-        AcademicTree::showTree();
-        
-        UI::clearInputBuffer();
-        UI::showPressAnyKey();
-        redirectToMenu("main");
-
-    } else if (choice == "2") {
-      redirectToMenu("students");
-
-    } else if (choice == "3") {
-      redirectToMenu("courses");
-
-    } else if (choice == "4") {
-      redirectToMenu("course_enrollments");
-
-    } else if (choice == "5") {
-      redirectToMenu("course_grades");
-
-    } else if (choice == "6") {
-      redirectToMenu("users");
-
-    } else {
-      // default handler
-      showUnderDevelopmentResponse ();
-    }
-  }
-
-  // showParentMenu
-  static void showParentMenu () {
-    showBanner();
-
-    string menuTitle = "Student's Parent Menu";
-
-    UI::initMenuOptions();
-
-    UI::addMenuOption ( "1", "View Student Academic Summary");
-    UI::addMenuOption ( "2", "View Student Information");
-    UI::addMenuOption ( "0", "Sign Out");
-
-    string choice = UI::showMenuOptions(menuTitle);
-    string menu_label = UI::getMenuLabel(choice);
- 
-    UI::clearScreen();
-    showBanner();
-
-    UI::showLine(menu_label);
-    UI::showEmptyLine();
-
-    // get student id from curr_user_id (see showLogin)
-    User data = UserList::getData (curr_user_id);
-    string student_id = data.student_id;
-
-    // menu handler
-    if (choice == "0") {
-      showLogin();
-
-    } else if (choice == "1") {    
-      AcademicTree::showStudentTree(student_id);
-
-    } else if (choice == "2") {
-      StudentList::showRecord ( student_id);
-      
-    } else {
-      // default handler
-      showUnderDevelopmentResponse ();
-    }
-    
-    UI::showEmptyLine();
-
-    UI::clearInputBuffer();
-    UI::showPressAnyKey();
-    redirectToMenu("parent");
-  }
-
-  // showStudentMenu
-  static void showStudentMenu () {
-    showBanner();
-
-    string menuTitle = "Manage Students";
+    string menuTitle = "Manage Course Enrollments";
 
     UI::initMenuOptions();
 
     UI::addMenuOption ( "1", "View List of Students");
-    UI::addMenuOption ( "2", "View Student Academic Information");
-    UI::addMenuOption ( "3", "Add New Student");
-    UI::addMenuOption ( "4", "Update Student Information");
-    UI::addMenuOption ( "5", "Remove an existing Student");
-    UI::addMenuOption ( "6", "View Academic Summary");
-    UI::addMenuOption ( "0", "Back to Main Menu");
-
-    string choice = UI::showMenuOptions(menuTitle);
-    string menu_label = UI::getMenuLabel(choice);
- 
-    UI::clearScreen();
-    showBanner();
-
-    UI::showLine(menu_label);
-    UI::showEmptyLine();
-
-    // menu handler
-    if (choice == "0") {
-      redirectToMenu("main");
-
-    } else if (choice == "1") {
-      StudentList::showTable("List of Students");
-
-    } else if (choice == "3") {  
-      string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
-      if (StudentList::exists(id)) {
-        UI::showLine ("Student Id already exists.");
-
-      } else {
-        string name = UI::showInputTextLine ("Enter Name", 20); 
-        int grade_level = UI::showInputInt("Enter Grade Level", 20); // no validation here
-        string new_city = UI::showInputTextLine ("Enter City of Birth", 20); 
-
-        UI::showEmptyLine();
-        
-        bool success = StudentList::addNew (id, name, grade_level, new_city);
-        if (success) {
-          UI::showEmptyLine();
-          UI::showLine ("New Record added.");
-          UI::showEmptyLine();
-          StudentList::showRecord ( id);
-        } else {
-          UI::showEmptyLine();
-          UI::showLine ("Record not added.");
-        }
-      }
- 
-    } else if ((choice == "2") || (choice == "4") || choice == "5") {
-      // all these choices needs an id to operate on
-      string id = UI::showInputText ("Enter Student Id", 20); // no spaces capture
-          
-      if (!StudentList::exists(id)) {
-        UI::showEmptyLine();
-        UI::showLine ("Student Id not found.");
-      
-      } else {
-        UI::showEmptyLine();
-
-        if (choice == "2") {
-          // found, display
-          StudentList::showRecord(id);
-          UI::showEmptyLine();
-
-          AcademicTree::showStudentTree(id);
-
-        } else {
-          // 4 or 5 (before update or remove, show old data)
-          StudentList::showRecord(id);
-          UI::showEmptyLine();
-
-          if (choice == "4") {
-            // update
-            UI::showLine ("Enter information to update:");
-            UI::showEmptyLine();
-
-            string new_name = UI::showInputTextLine ("Enter Name", 20); 
-            string new_city = UI::showInputTextLine ("Enter City of Birth", 20); 
-    
-            bool success = StudentList::update (id, new_name, new_city);
-            if (success) {
-              UI::showEmptyLine();
-              UI::showLine("Record updated.");
-              UI::showEmptyLine();
-              StudentList::showRecord ( id);
-            }
-
-          } else if (choice == "5") {
-            // remove
-            UI::showLine ("Are you sure?");
-            
-            string sure = UI::showInputText ("Please answer (y if sure)", 20); 
-            if (sure == "y") {
-              StudentList::remove(id);
-              UI::showEmptyLine();
-              UI::showLine ("Record deleted.");
-            }
-          }
-        }
-
-        UI::showEmptyLine();
-      }
- 
-    } else if (choice == "6") {
-      UI::clearScreen();
-      showBanner();
-        
-      AcademicTree::showTree();
-        
-    } else {
-      // default handler
-      showUnderDevelopmentResponse ();
-    }
-          
-    UI::clearInputBuffer();
-    UI::showPressAnyKey();
-    redirectToMenu("students");
-
-  }
-
-  // showCoursesMenu
-  static void showCoursesMenu () {
-    showBanner();
-
-    string menuTitle = "Manage Courses";
-
-    UI::initMenuOptions();
-
-    UI::addMenuOption ( "1", "View List of Courses");
-    UI::addMenuOption ( "2", "Add New Course");
-    UI::addMenuOption ( "3", "Update Course Information");
-    UI::addMenuOption ( "4", "Remove an existing Course");
-    UI::addMenuOption ( "0", "Back to Main Menu");
-
-    string choice = UI::showMenuOptions(menuTitle);
-    string menu_label = UI::getMenuLabel(choice);
-
-    UI::clearScreen();
-    showBanner();
-  
-    UI::showLine(menu_label);
-    UI::showEmptyLine();
-
-    // menu handler
-    if (choice == "0") {
-      redirectToMenu("main");
-
-    } else if (choice == "1") {
-      CourseList::showTable("List of Courses");
-      
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectToMenu("courses");
-
-      UI::showEmptyLine();
-
-      } else if (choice == "2") {
-      string id = UI::showInputText ("EnterCourse Id", 20);
-      if (CourseList::exists(id)) {
-        UI::showLine ("Course Id already exists.");
-        UI::clearInputBuffer();
-        UI::showEmptyLine();
-
-      } else {
-        string name = UI::showInputTextLine ("Enter Name", 20);
-
-        UI::showEmptyLine();
-
-        bool success = CourseList::addNew (id, name);
-        if (success) {
-          UI::showEmptyLine();
-          UI::showLine ("New Record added.");
-          UI::showEmptyLine();
-          CourseList::showRecord (id);
-        } else {
-          UI::showEmptyLine();
-          UI::showLine ("Record not added.");
-        }
-      }
-
-    } else if ((choice == "3") || choice == "4") {
-      string id = UI::showInputText ("Enter Course Id", 20);
-
-      if (!CourseList::exists(id)) {
-        UI::showEmptyLine();
-        UI::showLine ("Course Id not found.");
-
-      } else {
-        UI::showEmptyLine();
-
-        // 3 or 4 (before update or remove, show old data)
-        CourseList::showRecord(id);
-        UI::showEmptyLine();
-
-        if (choice == "3") {
-          // update
-          UI::showLine ("Enter information to update:");
-          UI::showEmptyLine();
-
-          string new_name = UI::showInputTextLine ("Enter Name", 20);
-
-          bool success = CourseList::update (id, new_name);
-          if (success) {
-            UI::showEmptyLine();
-            UI::showLine ("Record updated.");
-            UI::showEmptyLine();
-            CourseList::showRecord (id);
-          } else {
-            UI::showEmptyLine();
-            UI::showLine ("Record not updated.");
-          }
-
-        } else if (choice == "4") {
-          // remove
-          UI::showLine ("Are you sure?");
-
-          string sure = UI::showInputText ("Please answer (y if sure)", 20);
-          if (sure == "y") {
-            CourseList::remove(id);
-            UI::showEmptyLine();
-            UI::showLine ("Record deleted.");
-          }
-        }
-      }
-
-      UI::showEmptyLine();
-
-    } else {
-      // default handler
-      showUnderDevelopmentResponse ();
-    }
-
-    UI::clearInputBuffer();
-    UI::showPressAnyKey();
-    redirectToMenu("courses");
-  }
-
-  // showCourseEnrollmentsMenu
-  static void showCourseEnrollmentsMenu () {
-    showBanner();
-
-    string menuTitle = "Manage Student Course Enrollments";
-
-    UI::initMenuOptions();
-
-    UI::addMenuOption ( "1", "View List of Courses");
-    UI::addMenuOption ( "2", "View List of Students");
-    UI::addMenuOption ( "3", "View List of Course Enrollments");
+    UI::addMenuOption ( "2", "View List of Courses");
+    UI::addMenuOption ( "3", "View List of Course Enrollmentss");
     UI::addMenuOption ( "4", "Enroll Student To A Course");  // this is addNew, there's no need for update here
     UI::addMenuOption ( "5", "Remove A Student Course");
     UI::addMenuOption ( "6", "View Academic Summary");
@@ -510,32 +167,83 @@ public:
       
     // menu handler
     if (choice == "0") {
-      redirectToMenu("Going Back to Main Menu...");
+      redirectToMenu("main");
 
-    } else if (choice == "1"){
+    } else if (choice == "1") {
+      StudentList::showTable("List of Students");
+     
+    } else if (choice == "2") {
       CourseList::showTable("List of Courses");
 
-     UI::clearInputBuffer();
-     UI::showPressAnyKey();
-     redirectToMenu("course_enrollments");
-      
-      UI::showEmptyLine();
-
-    } else if (choice == "2") {
-      StudentList::showTable("List of Students");
-      
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-     redirectToMenu("course_enrollments");
-
-      UI::showEmptyLine();
-
-    } else if (choice == "3"){
+    } else if (choice == "3") {
       CourseEnrollmentList::showTable("List of Course Enrollments");
 
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-     redirectToMenu("course_enrollments");
+    } else if (choice == "4") {  
+      string id = UI::showInputText ("Enter Course Enrollment Id", 20); // no spaces capture
+      if (CourseList::exists(id)) {
+        UI::showLine ("Course Enrollment Id already exists.");
+        UI::clearInputBuffer();
+        UI::showEmptyLine();
+    
+      } else {
+        // enter student & course
+        UI::showEmptyLine();
+        string student_id = UI::showInputText ("Enter Student Id", 20); 
+        string course_id = UI::showInputText ("Enter Course Id", 20); 
+      
+        UI::showEmptyLine();
+
+        bool valid = true;
+        if (!StudentList::exists(student_id)) {
+          UI::showLine ("Student Id does not exists.");
+          valid = false;
+        }
+
+        if (!CourseList::exists(course_id)) {
+          UI::showLine ("Course Id does not exists.");
+          valid = false;
+        }
+        
+        if (!valid) {
+          UI::showEmptyLine();
+
+        } else {
+          bool success = CourseEnrollmentList::addNew (id, student_id, course_id);
+          if (success) {
+            UI::showEmptyLine();
+            UI::showLine ("New Record added.");
+            UI::showEmptyLine();
+            CourseEnrollmentList::showRecord ( id);
+          } else {
+            UI::showEmptyLine();
+            UI::showLine ("Record not added.");
+          }
+        }
+      }
+ 
+    } else if (choice == "5") {
+      string id = UI::showInputText ("Enter Course Enrollment Id", 20); // no spaces capture
+ 
+      if (!CourseEnrollmentList::exists(id)) {
+        UI::showEmptyLine();
+        UI::showLine ("Course Enrollment Id not found.");
+      
+      } else {
+        UI::showEmptyLine();
+      
+        CourseEnrollmentList::showRecord(id);
+        UI::showEmptyLine();
+
+        // remove
+        UI::showLine ("Are you sure?");
+        
+        string sure = UI::showInputText ("Please answer (y if sure)", 20); 
+        if (sure == "y") {
+          CourseEnrollmentList::remove(id);
+          UI::showEmptyLine();
+          UI::showLine ("Record deleted.");
+        }
+     }
 
       UI::showEmptyLine();
 
