@@ -177,7 +177,7 @@ public:
         // exit(EXIT_SUCCESS);
 
         UI::showEmptyLine(1);
-        UI::showTable(title, headers, table_rows, colWidth, numCols);
+        UI::showTable(title, headers, table_rows, col_sizes, num_cols);
         UI::showEmptyLine(1);
     }
     
