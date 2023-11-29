@@ -515,15 +515,27 @@ public:
     } else if (choice == "1"){
       CourseList::showTable("List of Courses");
 
+     UI::clearInputBuffer();
+     UI::showPressAnyKey();
+     redirectToMenu("course_enrollments");
+      
       UI::showEmptyLine();
 
     } else if (choice == "2") {
       StudentList::showTable("List of Students");
       
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+     redirectToMenu("course_enrollments");
+
       UI::showEmptyLine();
 
     } else if (choice == "3"){
       CourseEnrollmentList::showTable("List of Course Enrollments");
+
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+     redirectToMenu("course_enrollments");
 
       UI::showEmptyLine();
 
