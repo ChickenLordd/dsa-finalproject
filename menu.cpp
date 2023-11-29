@@ -515,28 +515,16 @@ public:
     } else if (choice == "1"){
       CourseList::showTable("List of Courses");
 
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectTodata_class_courses("List of Courses");
-     
       UI::showEmptyLine();
 
     } else if (choice == "2") {
       StudentList::showTable("List of Students");
       
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectTodata_class_students("List of Students");
-     
       UI::showEmptyLine();
 
     } else if (choice == "3"){
       CourseEnrollmentList::showTable("List of Course Enrollments");
 
-      UI::clearInputBuffer();
-      UI::showPressAnyKey();
-      redirectTodata_class_course_enrollments("List of Course Enrollments");
-     
       UI::showEmptyLine();
 
     } else if (choice == "6") {
