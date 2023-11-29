@@ -61,8 +61,8 @@ public:
         }
     }
 
-    // only to update name
-    // never update id, if you want to update id, remove and addNew
+    // can only to update name
+    // must never update id, if you want to update id, then remove and addNew
     static bool update (const string& id, const string& name) {
         bool exists = course_list.nodeExists (id);
 
