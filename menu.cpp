@@ -487,12 +487,12 @@ public:
   static void showCourseEnrollmentsMenu () {
     showBanner();
 
-    string menuTitle = "Manage Course Enrollments";
+    string menuTitle = "Manage Student Course Enrollments";
 
     UI::initMenuOptions();
 
-    UI::addMenuOption ( "1", "View List of Students");
-    UI::addMenuOption ( "2", "View List of Courses");
+    UI::addMenuOption ( "1", "View List of Courses");
+    UI::addMenuOption ( "2", "View List of Students");
     UI::addMenuOption ( "3", "View List of Course Enrollments");
     UI::addMenuOption ( "4", "Enroll Student To A Course");  // this is addNew, there's no need for update here
     UI::addMenuOption ( "5", "Remove A Student Course");
@@ -510,14 +510,32 @@ public:
       
     // menu handler
     if (choice == "0") {
-      redirectToMenu("main");
+      redirectToMenu("Going Back to Main Menu...");
 
-    } else if (choice == "1") {
+    } else if (choice == "1"){
+      CourseList::showTable("List of Courses");
+
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectTodata_class_courses("List of Courses");
+     
+      UI::showEmptyLine();
+
+    } else if (choice == "2") {
       StudentList::showTable("List of Students");
       
       UI::clearInputBuffer();
       UI::showPressAnyKey();
-      redirectToMenu("course_enrollments");
+      redirectTodata_class_students("List of Students");
+     
+      UI::showEmptyLine();
+
+    } else if (choice == "3"){
+      CourseEnrollmentList::showTable("List of Course Enrollments");
+
+      UI::clearInputBuffer();
+      UI::showPressAnyKey();
+      redirectTodata_class_course_enrollments("List of Course Enrollments");
      
       UI::showEmptyLine();
 

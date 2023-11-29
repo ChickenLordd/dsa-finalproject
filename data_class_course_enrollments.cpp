@@ -171,8 +171,8 @@ public:
         course_enrollment_list.traverse ( tableAddRow );
 
         const string headers[] = {"Id", "Student Id", "Student Name", "Course Id", "Course Name"};
-        int colWidth[] = {15, 10, 20, 10, 20};
-        int numCols = 5;
+        int col_sizes[] = {15, 10, 20, 10, 20};
+        int num_cols = 5;
     
         // exit(EXIT_SUCCESS);
 
