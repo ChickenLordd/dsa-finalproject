@@ -1,7 +1,5 @@
 #pragma once
 
-#include "iostream"
-#include <string>
 #include "base_class_linkedlist.cpp"
 #include "base_class_ui.cpp"
 #include "data_class_students.cpp"
@@ -41,13 +39,13 @@ public:
         // node id should be unique, so it's better to combine student id & course id (separated by colon for readability)
 
         addNew("S001:CMAT10", "S001", "CMAT10");
-        addNew("S001:CBIO10", "S001", "CBIO10");
+        // addNew("S001:CBIO10", "S001", "CBIO10");
         addNew("S001:CPHY10", "S001", "CPHY10");
-        addNew("S001:CCHE10", "S001", "CCHE10");
+        // addNew("S001:CCHE10", "S001", "CCHE10");
     
         addNew("S002:CMAT10", "S002", "CMAT10");
-        addNew("S002:CBIO10", "S002", "CBIO10");
-        addNew("S002:CPHY10", "S002", "CPHY10");
+        // addNew("S002:CBIO10", "S002", "CBIO10");
+        // addNew("S002:CPHY10", "S002", "CPHY10");
         addNew("S002:CCHE10", "S002", "CCHE10");
     
         // addNew("S004:CMAT11", "S004", "CMAT11");
@@ -55,7 +53,7 @@ public:
         addNew("S004:CPHY11", "S004", "CPHY11");
         // addNew("S004:CCHE11", "S004", "CCHE11");
     
-        addNew("S005:CMAT11", "S005", "CMAT11");
+        // addNew("S005:CMAT11", "S005", "CMAT11");
         // addNew("S005:CBIO11", "S005", "CBIO11");
         addNew("S005:CPHY11", "S005", "CPHY11");
         addNew("S005:CCHE11", "S005", "CCHE11");
@@ -127,6 +125,25 @@ public:
         }
         return data;
     }
+    
+    // display record
+    static void showRecord  (const string& id) {
+        bool exists = course_enrollment_list.nodeExists (id);
+
+        if (exists) {
+            CourseEnrollment data = getData(id);
+            int padding = 15;
+
+            UI::showLine ( UI::strPadEnd ( "Id", padding) + ": " + data.id );
+            UI::showLine ( UI::strPadEnd ( "Student Id", padding) + ": " + data.student_id );
+            UI::showLine ( UI::strPadEnd ( "Student Name", padding) + ": " + data.student_name );
+            UI::showLine ( UI::strPadEnd ( "Course Id", padding) + ": " + data.course_id );
+            UI::showLine ( UI::strPadEnd ( "Course Name", padding) + ": " + data.course_name );
+            
+        } else {
+            UI::showLine ("Not found.");
+        }
+    }
 
     // showTable related
     static void tableInitRows() {
@@ -139,6 +156,7 @@ public:
         vector<string> row;
         row.push_back (data.id);
         row.push_back (data.student_id);
+        row.push_back (data.student_name);
         row.push_back (data.course_id);
         row.push_back (data.course_name);
 
@@ -150,20 +168,14 @@ public:
 
         // use anonymous callback function to build rows
         // add row one by one per node
-        course_enrollment_list.traverse ( tableAddRow );
+        
+        CourseEnrollment.traverse ( tableAddRow );
 
-        const string headers[] = {"Id", "Student Id", "Course Id", "Course Name"};
-        int col_sizes[] = {15, 10, 10, 20};
-        int num_cols = 4;
-    
-        // exit(EXIT_SUCCESS);
+        const string headers[] = {"Id", "Student Id", "Student Name", "Course Id", "Course Name"};
+        int colWidth[5] = {15, 10, 20, 10, 20};
+        int numCols = 5;
 
-        UI::showEmptyLine(1);
-        UI::showTable(title, headers, table_rows, col_sizes, num_cols);
-        UI::showEmptyLine(1);
-    }
-    
-    // Enroll Student in a new Course
+        // Enroll Student in a new Course
     static void enrollStudentInCourse() {
         string studentId, courseId;
 
@@ -192,30 +204,12 @@ public:
             UI::showErrorMessage("Student or Course not found. Please check the IDs and try again.");
         }
     }
+    
+        // exit(EXIT_SUCCESS);
 
-    // Remove a Student from Course
-    static void removeStudentFromCourse() {
-        string enrollmentId;
-
-        // Prompt for enrollment ID
-        UI::showMessage("Enter Enrollment ID: ");
-        UI::getStringInput(enrollmentId);
-
-        // Check if the enrollment exists
-        if (exists(enrollmentId)) {
-            // Remove the enrollment
-            remove(enrollmentId);
-            UI::showMessage("Student removed from the course.");
-        } else {
-            UI::showErrorMessage("Enrollment not found. Please check the ID and try again.");
-        }
+        UI::showEmptyLine(1);
+        UI::showTable(title, headers, table_rows, colWidth, numCols);
+        UI::showEmptyLine(1);
     }
-
-    // Back to Main Menu
-    static void backToMainMenu() {
-        // Add any cleanup or additional logic if needed
-        UI::clearScreen();
-        UI::showMessage("Returning to the main menu...\n");
-    }
-};
+    
 };
